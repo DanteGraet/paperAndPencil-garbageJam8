@@ -9,6 +9,12 @@ function g.update(dt)
     notebook:update(dt)
 end
 
+function g.keypressed(key)
+    if key == "space" then
+        notebook:setOpen()
+    end
+end
+
 function g.mousepressed(x, y, button)
     if button == 1 then
         notebook:startDraw(x, y, false)

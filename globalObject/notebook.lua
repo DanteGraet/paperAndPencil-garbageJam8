@@ -25,6 +25,7 @@ function Notebook:new(size)
     end
 
     obj.currentPage = 1
+    obj.isOpen = true
 
     setmetatable(obj, {
         __index = Notebook,
@@ -33,7 +34,37 @@ function Notebook:new(size)
     return obj
 end
 
+function Notebook:setOpen(isOpen)
+    self.isOpen = isOpen or not self.isOpen
+    
+    if self.isOpen == true then
+        self:updatePageVisibility()
+    else
+        self:updatePageVisibility(false)
+    end
+end
+
+function Notebook:updatePageVisibility(isVisible)
+    if isVisible ~= nil then
+        for i = 1,#self.pages do
+            local page = self.pages[i]
+            page.isOpen = isVisible
+        end
+    else
+        for i = 1,#self.pages do
+            local page = self.pages[i]
+            if i <= self.currentPage then
+                page.isOpen = true
+            else
+                page.isOpen = false
+            end
+        end
+    end
+end
+
 function Notebook:wheelmoved(x, y)      -- i would wheelMoved but consistency or somethin
+    if self.isOpen == false then return end
+
     self:endDraw()
     self.currentPage = self.currentPage + sign(y)
 
@@ -42,13 +73,19 @@ function Notebook:wheelmoved(x, y)      -- i would wheelMoved but consistency or
     elseif self.currentPage < 1 then
         self.currentPage = #self.pages
     end
+
+    self:updatePageVisibility()
 end
 
 function Notebook:startDraw(mx, my, erase)
+    if self.isOpen == false then return  end
+
     self.pages[self.currentPage]:startDraw(mx, my, erase)
 end
 
 function Notebook:endDraw(mx, my, erase)
+    if self.isOpen == false then return end
+
     self.pages[self.currentPage]:endDraw(mx, my, erase)
 end
 
@@ -62,5 +99,9 @@ end
 
 function Notebook:draw()
     -- draw the current one for now but draw all if time is > 0 and < 2
-    self.pages[self.currentPage]:draw()
+    for i = 1,#self.pages do
+        local page = self.pages[i]
+        page:draw()
+    end
+--    self.pages[self.currentPage]:draw()
 end

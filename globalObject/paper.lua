@@ -39,7 +39,7 @@ function Paper:new(x, y, width, height)
 
     -- 0 is closed, 1 is open and 2 is not infornt or something
     obj.openingTimer = 1
-
+    obj.isOpen = true
 
     obj.isDrawing = false
     obj.erase = false
@@ -79,7 +79,7 @@ function Paper:endDraw(erase)
     end
 end
 
-local targetTime = 0
+
 function Paper:update(dt)
     if self.isDrawing == true then
         local mx, my = love.mouse.getPosition() -- TODO: wrap in camera
@@ -109,25 +109,17 @@ function Paper:update(dt)
     end
 
     --self.openingTimer = self.openingTimer + dt -- should just apporach target
-    if love.keyboard.isDown("0") then
-        targetTime = 0
-    elseif love.keyboard.isDown("1") then
-        targetTime = 1
-    elseif love.keyboard.isDown("2") then
-        targetTime = 2
+
+    if self.isOpen then
+        self.openingTimer = math.min(self.openingTimer + dt*5, 1)
+    else
+        self.openingTimer = math.max(self.openingTimer - dt*5, 0)
     end
 
-
-    if self.openingTimer < targetTime then
-        self.openingTimer = math.min(self.openingTimer + dt*5, targetTime)
-    elseif self.openingTimer > targetTime then
-        self.openingTimer = math.max(self.openingTimer - dt*5, targetTime)
-    end
-
-    local sine = 1-math.sin(self.openingTimer * math.pi / 2)
+    local sine = math.cos(self.openingTimer * math.pi / 2)
     -- https://love2d.org/wiki/Mesh:setVertexAttribute
-    self.mesh:setVertexAttribute(1, 1, self.width*1/5 - self.width/5 * self.openingTimer, sine * self.height)
-    self.mesh:setVertexAttribute(2, 1, self.width*4/5 + self.width/5 * self.openingTimer, sine * self.height)
+    self.mesh:setVertexAttribute(1, 1, 0 - self.width/5 * (1-self.openingTimer), sine * self.height)
+    self.mesh:setVertexAttribute(2, 1, self.width + self.width/5 * (1-self.openingTimer), sine * self.height)
 
 end
 
