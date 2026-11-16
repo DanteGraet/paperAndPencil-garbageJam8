@@ -64,6 +64,15 @@ function Paper:reset()
     love.graphics.setCanvas()
 end
 
+function Paper:mark(text, x, y)
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.origin()
+    love.graphics.setColor(0, 0, 0)
+    love.graphics.print(text, x, y)
+
+    love.graphics.setCanvas()
+end
+
 function Paper:startDraw(mx, my, erase)
     local mx, my = love.mouse.getPosition() -- TODO: wrap in camera
     self.erase = erase  -- true or false, for black or white colour
@@ -111,16 +120,20 @@ function Paper:update(dt)
     --self.openingTimer = self.openingTimer + dt -- should just apporach target
 
     if self.isOpen then
-        self.openingTimer = math.min(self.openingTimer + dt*5, 1)
+        self.openingTimer = math.min(self.openingTimer + dt*3, 1)
     else
-        self.openingTimer = math.max(self.openingTimer - dt*5, 0)
+        self.openingTimer = math.max(self.openingTimer - dt*3, 0)
     end
 
     local sine = math.cos(self.openingTimer * math.pi / 2)
-    -- https://love2d.org/wiki/Mesh:setVertexAttribute
-    self.mesh:setVertexAttribute(1, 1, 0 - self.width/5 * (1-self.openingTimer), sine * self.height)
-    self.mesh:setVertexAttribute(2, 1, self.width + self.width/5 * (1-self.openingTimer), sine * self.height)
 
+    -- https://love2d.org/wiki/Mesh:setVertexAttribute
+    self.mesh:setVertexAttribute(1, 1, 0 - self.width/3 * (sine), sine * self.height)
+    self.mesh:setVertexAttribute(2, 1, self.width + self.width/3 * (sine), sine * self.height)
+
+    for i = 1, self.mesh:getVertexCount() do
+        self.mesh:setVertexAttribute(i, 3, 1-sine/2, 1-sine/2, 1-sine/2)
+    end
 end
 
 function Paper:draw()

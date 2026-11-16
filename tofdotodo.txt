@@ -1,10 +1,40 @@
 
+level ideas:
+    The first is the controlls
+    Chess board
+    scenes
+        - trees
+        - birds
+        - animals
+    grid of symbols/objects
+    inside a building
+    ship with greebleing
+    map
+    bote game
+    desk setup (plants/lights)
+    pocket knife
+    keychain
+    wallet with stuffs
+    carpark (topdown)
+    trippy trippin'
+    stick figgures (accsessories or somethin')
+    garbage bins
+    solar system
+    lecture whiteboard
+
+    box o chocklate
+    terrarium (antfarm)
+
+eahc need:
+    Time limit (viewing)
+
+
 Spot the difference
     Make objects spawn (save)
     make changes    (and save/mark them)
     identify the changes
 
 Paper & pencil
-    Open/close canvas
+    ✅Open/close canvas
     ✅Draw on canvas (ig points and md for line)
-    
+
