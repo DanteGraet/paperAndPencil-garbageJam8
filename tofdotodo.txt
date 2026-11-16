@@ -1,0 +1,10 @@
+
+Spot the difference
+    Make objects spawn (save)
+    make changes    (and save/mark them)
+    identify the changes
+
+Paper & pencil
+    Open/close canvas
+    Draw on canvas (ig points and md for line)
+    
