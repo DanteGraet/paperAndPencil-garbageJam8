@@ -103,4 +103,4 @@ for i = 1,#globalObjects do
 end
 
 love.graphics.setDefaultFilter("nearest","nearest")
-love.filesystem.load("code/globals.lua")()
+--love.filesystem.load("code/globals.lua")()

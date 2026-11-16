@@ -37,6 +37,10 @@ local function update(dt)
             gamestateManager.setGamestate(nextGameState)
         end
     end
+
+    if love.keyboard.isDown("space", "escape") then
+        gamestateManager.setGamestate(nextGameState)
+    end
 end
 
 local function sineOut(percent)
