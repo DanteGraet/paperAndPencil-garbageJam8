@@ -15,7 +15,7 @@ setmetatable(Paper, {
 })
 
 
-function Paper:new(scaleType, x, y, width, height)
+function Paper:new(x, y, width, height)
     local obj = {}
 
     obj.x = x
@@ -27,7 +27,7 @@ function Paper:new(scaleType, x, y, width, height)
 
     obj.canvas = love.graphics.newCanvas(width or 1500, height or 1050)
 
-    -- 0 is closed, 1 is open
+    -- 0 is closed, 1 is open and 2 is not infornt or something
     obj.openingTimer = 1
 
 
@@ -62,7 +62,9 @@ function Paper:startDraw(mx, my, erase)
 end
 
 function Paper:endDraw(erase)
-    if erase == self.erase then
+    if erase ~= nil and erase == self.erase then
+        self.isDrawing = false
+    else
         self.isDrawing = false
     end
 end

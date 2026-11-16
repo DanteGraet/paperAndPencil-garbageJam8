@@ -1,33 +1,37 @@
 local g = {}
 
-local paper = {}
+local notebook = {}
 function g.load()
-    paper = Paper(50, 50)
+    notebook = Notebook(3)
 end
 
 function g.update(dt)
-    paper:update(dt)
+    notebook:update(dt)
 end
 
 function g.mousepressed(x, y, button)
     if button == 1 then
-        paper:startDraw(x, y, false)
+        notebook:startDraw(x, y, false)
     elseif button == 2 then
-        paper:startDraw(x, y, true)
+        notebook:startDraw(x, y, true)
     end
 end
 
 function g.mousereleased(x, y, button)
     if button == 1 then
-        paper:endDraw(false)
+        notebook:endDraw(false)
     elseif button == 2 then
-        paper:endDraw(true)
+        notebook:endDraw(true)
     end
+end
+
+function g.wheelmoved(x, y)
+    notebook:wheelmoved(x, y)
 end
 
 function g.draw()
     love.graphics.setColor(1,1,1)
-    paper:draw()
+    notebook:draw()
 end
 
 return g

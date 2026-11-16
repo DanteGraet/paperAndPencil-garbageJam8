@@ -6,5 +6,5 @@ Spot the difference
 
 Paper & pencil
     Open/close canvas
-    Draw on canvas (ig points and md for line)
+    ✅Draw on canvas (ig points and md for line)
     
