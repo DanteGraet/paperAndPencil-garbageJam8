@@ -26,11 +26,9 @@ function Notebook:new(size)
 
     obj.currentPage = 1
 
-
     setmetatable(obj, {
         __index = Notebook,
     })
-
 
     return obj
 end
@@ -56,7 +54,10 @@ end
 
 
 function Notebook:update(dt)
-    self.pages[self.currentPage]:update(dt)
+    -- um they actually all have to update their drawing timer
+    for i = 1, #self.pages do
+        self.pages[i]:update(dt)
+    end
 end
 
 function Notebook:draw()

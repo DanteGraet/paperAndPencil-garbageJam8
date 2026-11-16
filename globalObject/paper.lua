@@ -26,6 +26,16 @@ function Paper:new(x, y, width, height)
     obj.height = height or 1050
 
     obj.canvas = love.graphics.newCanvas(width or 1500, height or 1050)
+    -- ok mesh is a new thing to me but i want it so shush
+    -- https://gist.github.com/Clemapfel/e7c1731f0d1cdbd60433e67ae107b325
+    obj.mesh = love.graphics.newMesh({
+        -- posX     posY        uv      colour
+        {0,         0,          0,0,    1,1,1},
+        {obj.width, 0,          1,0,    1,1,1},
+        {obj.width, obj.height, 1,1,    1,1,1},
+        {0,         obj.height, 0,1,    1,1,1},
+    }, "fan", "dynamic")
+    obj.mesh:setTexture(obj.canvas)
 
     -- 0 is closed, 1 is open and 2 is not infornt or something
     obj.openingTimer = 1
@@ -69,8 +79,8 @@ function Paper:endDraw(erase)
     end
 end
 
+local targetTime = 0
 function Paper:update(dt)
-    
     if self.isDrawing == true then
         local mx, my = love.mouse.getPosition() -- TODO: wrap in camera
         local editWidth = (self.erase and eraserWidth) or pencilWidth
@@ -98,12 +108,31 @@ function Paper:update(dt)
         love.graphics.setCanvas()
     end
 
+    --self.openingTimer = self.openingTimer + dt -- should just apporach target
+    if love.keyboard.isDown("0") then
+        targetTime = 0
+    elseif love.keyboard.isDown("1") then
+        targetTime = 1
+    elseif love.keyboard.isDown("2") then
+        targetTime = 2
+    end
+
+
+    if self.openingTimer < targetTime then
+        self.openingTimer = math.min(self.openingTimer + dt*5, targetTime)
+    elseif self.openingTimer > targetTime then
+        self.openingTimer = math.max(self.openingTimer - dt*5, targetTime)
+    end
+
+    local sine = 1-math.sin(self.openingTimer * math.pi / 2)
+    -- https://love2d.org/wiki/Mesh:setVertexAttribute
+    self.mesh:setVertexAttribute(1, 1, self.width*1/5 - self.width/5 * self.openingTimer, sine * self.height)
+    self.mesh:setVertexAttribute(2, 1, self.width*4/5 + self.width/5 * self.openingTimer, sine * self.height)
+
 end
 
 function Paper:draw()
-    if self.openingTimer == 1 then
-        love.graphics.draw(self.canvas, self.x, self.y)
-    end
+    love.graphics.draw(self.mesh, self.x, self.y)
 
     if self.isDrawing and self.erase then
         love.graphics.setColor(0, 0, 0)
