@@ -44,7 +44,6 @@ function Photo:new(x, y, level)
 
     obj:render(1)
     obj:render(2)
-    obj:permutate()
 
     return obj
 end
@@ -63,11 +62,28 @@ function Photo:render(canvasNo)
     love.graphics.setCanvas()
 end
 
+
 function Photo:permutate(count)
-    --self.changes = self.level:permutate(objects)
+    print("MUtating")
+
+    self.changes = self.level.permutate(self.objects, count or 3)
+
+    self:render(1)
+    self:render(2)
 end
+
 
 function Photo:draw()
     local canvasToDraw = math.floor((timer*5) % 2) + 1
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
+
+    -- CHEAT PLEASE REMOVE LATER
+    if DEV == true and love.keyboard.isDown("lshift") then
+        love.graphics.setColor(1,0, 0)
+        for i = 1,#self.changes do
+            local c = self.changes[i]
+            love.graphics.circle("line", c[1], c[2], c[3])
+        end
+        love.graphics.setColor(1,1,1)
+    end
 end

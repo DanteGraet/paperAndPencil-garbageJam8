@@ -17,8 +17,8 @@ function ObjectBase:new(x, y, rx, ry, images, colour)
 
     obj.x = x
     obj.y = y
-    obj.rx = rx
-    obj.ry = ry
+    obj.rx = rx or 50
+    obj.ry = ry or 50
     obj.colour = colour
 
 
