@@ -46,18 +46,23 @@ function Gallery:render(pictureNo)
     if self.pictures[no] then
         self.pictures[no]:render(1)
         self.pictures[no]:render(2)
-        print(no, "renderd")
     end
 end
 
 function Gallery:nextPhoto()
-    print("time")
-
     self.currentPhoto = self.currentPhoto + 1
     self:render()
 
-    if self.currentPhoto > #self.pictures then
-    --    phase = "spotting"
+    if self.currentPhoto > #self.pictures and phase ~= "spotting" then
+        phase = "spotting"
+        self.currentPhoto = 1
+        self.visualPhoto = 0
+    end
+
+    if phase == "spotting" then
+        if self.pictures[self.currentPhoto] then
+            self.pictures[self.currentPhoto]:permutate(math.random(3, 5))
+        end
     end
 end
 
@@ -77,14 +82,25 @@ function Gallery:update(dt)
             photo.x = 65 - (self.visualPhoto-i)*1920
         end
     end
+
+    -- edge case haha
+    if self.visualPhoto < 1 and phase == "spotting" then
+        local photo = self.pictures[#self.pictures]
+        photo.x = 65 - (self.visualPhoto)*1920
+    end
 end
 
 
 function Gallery:draw()
     for i = math.floor(self.visualPhoto), math.ceil(self.visualPhoto) do
         local photo = self.pictures[i]
+
+        if i == 0 and phase == "spotting" then
+            photo = self.pictures[#self.pictures]
+        end
+
         if photo then
-            if phase == "drawing" then
+            if phase == "drawing" or i == 0 then
                 photo:draw()
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
