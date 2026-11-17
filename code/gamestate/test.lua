@@ -2,18 +2,20 @@ local g = {}
 
 local notebook = {}
 local photo
-
+local gallery
 
 function g.load()
     notebook = Notebook(3)
-    photo = Photo(65, 65, "grid")
+    --photo = Photo(65, 65, "grid")
 
     camera = Camera("fit", 1920, 1080)
     timer = 0
 
     phase = "drawing"
 
-    photo:render(1)
+    gallery = Gallery(3)
+
+    --photo:render(1)
 end
 
 function g.resize()
@@ -22,6 +24,7 @@ end
 
 function g.update(dt)
     notebook:update(dt)
+    gallery:update(dt)
     timer = timer + dt
 end
 
@@ -29,8 +32,9 @@ function g.keypressed(key)
     if key == "space" then
         notebook:setOpen()
     elseif key == "t" then
-        photo:permutate(3)
-        phase = "spotting"
+        --photo:permutate(3)
+        --phase = "spotting"
+        gallery:nextPhoto()
     end
 end
 
@@ -63,11 +67,13 @@ function g.draw()
     love.graphics.setBackgroundColor(73/255, 142/255, 145/255)
     love.graphics.setColor(1,1,1)
 
-    if phase == "drawing" then
-        photo:draw()
-    elseif phase == "spotting" then
-        photo:drawWithScaleBonus()
-    end
+    -- if phase == "drawing" then
+    --     photo:draw()
+    -- elseif phase == "spotting" then
+    --     photo:drawWithScaleBonus()
+    -- end
+
+    gallery:draw()
 
     notebook:draw()
 end

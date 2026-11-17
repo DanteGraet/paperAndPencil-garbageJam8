@@ -19,10 +19,9 @@ setmetatable(Photo, {
 
 
 function Photo:new(x, y, level)
-    math.randomseed(os.time(), love.timer.getTime())
     local obj = {}
 
-    obj.level = love.filesystem.load("pictures/" .. level .. ".lua")()
+    obj.level = love.filesystem.load("pictures/" .. level)()
     obj.objects = {}
     obj.changes = {}
 
@@ -42,8 +41,8 @@ function Photo:new(x, y, level)
     obj.level.loadObjects()
     obj.objects = obj.level.generateObjects()
 
-    obj:render(1)
-    obj:render(2)
+    -- obj:render(1)
+    -- obj:render(2)
 
     return obj
 end
