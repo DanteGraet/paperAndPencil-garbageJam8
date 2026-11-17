@@ -9,7 +9,7 @@ end
 Notebook = {}
 Notebook.__index = Notebook
 
-local markingFont = love.graphics.newFont("code/gamestate/splash/fontBlack.ttf", 12)
+fontManager.loadFont("assets/QuindocahLite.ttf", "quindocha")
 
 setmetatable(Notebook, {
     __call = function(self, size)
@@ -23,18 +23,20 @@ function Notebook:new(size)
 
     obj.pages = {}
     for i = 1, size do
-        local page = Paper(50, 50)   -- 5050 is default for now A4is is default so who cares?
-        love.graphics.setFont(markingFont)
-        page:mark(i .. "/" .. size)
+        local page = Paper(15, 15)   -- 5050 is default for now A4is is default so who cares?
+        fontManager.set("quindocha", 32)
+        page:mark(size - i + 1 .. "/" .. size, 16, 16)
         table.insert(obj.pages, page) 
     end
 
-    obj.currentPage = 1
+    obj.currentPage = size
     obj.isOpen = true
 
     setmetatable(obj, {
         __index = Notebook,
     })
+
+    obj:updatePageVisibility(isVisible)
 
     return obj
 end

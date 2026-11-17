@@ -1,3 +1,6 @@
+Level generation :D
+
+
 
 level ideas:
     The first is the controlls
@@ -21,12 +24,27 @@ level ideas:
     garbage bins
     solar system
     lecture whiteboard
+    piet mondrian
+    bookshelf/shelf/library
+    ocean
+    cuircut diagram
+    cityscape
 
     box o chocklate
     terrarium (antfarm)
 
 eahc need:
     Time limit (viewing)
+
+
+Title screen
+Settings?
+    Volume
+    Keybinds?
+    Hold to see, hold to hide, toggle
+Creduts (Not chap7E)
+
+highscore or someting
 
 
 Spot the difference
@@ -38,3 +56,7 @@ Paper & pencil
     ✅Open/close canvas
     ✅Draw on canvas (ig points and md for line)
 
+Permutation algorythm:
+add objects to a new lights
+shuffel new list
+go top to bottom count tiles and permuatet that object

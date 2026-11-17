@@ -5,8 +5,10 @@ Paper = {}
 Paper.__index = Paper
 
 
+local paperColour = {1, 1, .9}
+local penColour   = {.3, .3, .3}
 local pencilWidth = 3
-local eraserWidth = 30
+local eraserWidth = 60
 
 setmetatable(Paper, {
     __call = function(self, width, height)
@@ -58,7 +60,7 @@ end
 function Paper:reset()
     love.graphics.setCanvas(self.canvas)
     love.graphics.origin()
-    love.graphics.setColor(1, 1, 1)
+    love.graphics.setColor(paperColour)
     love.graphics.rectangle("fill", 0, 0, self.width, self.height)
 
     love.graphics.setCanvas()
@@ -67,14 +69,14 @@ end
 function Paper:mark(text, x, y)
     love.graphics.setCanvas(self.canvas)
     love.graphics.origin()
-    love.graphics.setColor(0, 0, 0)
+    love.graphics.setColor(penColour)
     love.graphics.print(text, x, y)
 
     love.graphics.setCanvas()
 end
 
 function Paper:startDraw(mx, my, erase)
-    local mx, my = love.mouse.getPosition() -- TODO: wrap in camera
+    local mx, my = camera:translatePosition(love.mouse.getPosition())
     self.erase = erase  -- true or false, for black or white colour
     self.lastPoint = {mx - self.x, my - self.y}
     self.isDrawing = true
@@ -91,18 +93,12 @@ end
 
 function Paper:update(dt)
     if self.isDrawing == true then
-        local mx, my = love.mouse.getPosition() -- TODO: wrap in camera
+        local mx, my = camera:translatePosition(love.mouse.getPosition())
         local editWidth = (self.erase and eraserWidth) or pencilWidth
+        love.graphics.setColor((self.erase and paperColour) or penColour)
 
         love.graphics.setCanvas(self.canvas)
         love.graphics.origin()
-
-
-        if self.erase then
-            love.graphics.setColor(1, 1, 1)
-        else
-            love.graphics.setColor(0, 0, 0)
-        end
 
         love.graphics.setLineWidth(editWidth)
 
@@ -128,8 +124,8 @@ function Paper:update(dt)
     local sine = math.cos(self.openingTimer * math.pi / 2)
 
     -- https://love2d.org/wiki/Mesh:setVertexAttribute
-    self.mesh:setVertexAttribute(1, 1, 0 - self.width/3 * (sine), sine * self.height)
-    self.mesh:setVertexAttribute(2, 1, self.width + self.width/3 * (sine), sine * self.height)
+    self.mesh:setVertexAttribute(1, 1, 0 - self.width/10 * (sine), sine * self.height)
+    self.mesh:setVertexAttribute(2, 1, self.width + self.width/10 * (sine), sine * self.height)
 
     for i = 1, self.mesh:getVertexCount() do
         self.mesh:setVertexAttribute(i, 3, 1-sine/2, 1-sine/2, 1-sine/2)

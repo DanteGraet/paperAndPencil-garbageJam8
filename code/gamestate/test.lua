@@ -1,12 +1,25 @@
 local g = {}
 
 local notebook = {}
+local photo
+
 function g.load()
     notebook = Notebook(3)
+    photo = Photo(65, 65, "grid")
+
+    camera = Camera("fit", 1920, 1080)
+    timer = 0
+
+    photo:render(1)
+end
+
+function g.resize()
+    camera:resize()
 end
 
 function g.update(dt)
     notebook:update(dt)
+    timer = timer + dt
 end
 
 function g.keypressed(key)
@@ -36,7 +49,11 @@ function g.wheelmoved(x, y)
 end
 
 function g.draw()
+    camera()
+    love.graphics.setBackgroundColor(73/255, 142/255, 145/255)
     love.graphics.setColor(1,1,1)
+    photo:draw()
+
     notebook:draw()
 end
 
