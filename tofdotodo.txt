@@ -51,6 +51,8 @@ Spot the difference
     ✅Make objects spawn (save)
     ✅make changes    (and save/mark them)
     identify the changes
+    Add in Next Button
+    Add in Score
 
 Paper & pencil
     ✅Open/close canvas

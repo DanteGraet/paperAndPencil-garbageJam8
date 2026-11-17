@@ -32,7 +32,7 @@ function level.generateObjects()
     return o
 end
 
-function level.permutate(objects, count)
+function level.permutate(objects)
     local changes = {}
 
     local choices = {}
@@ -42,7 +42,7 @@ function level.permutate(objects, count)
         end
     end
 
-    for i = 1, math.min(count, #choices) do
+    for i = 1, math.min(math.random(3, 5), #choices) do
         local r = math.random(1, #choices)
         local obj = objects[choices[r]]
 

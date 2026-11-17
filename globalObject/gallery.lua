@@ -74,7 +74,7 @@ function Gallery:nextPhoto()
 
     if phase == "spotting" then
         if self.pictures[self.currentPhoto] then
-            self.pictures[self.currentPhoto]:permutate(math.random(3, 5))
+            self.pictures[self.currentPhoto]:permutate()
         end
     else
         self.lastTimeRemaining = self.timeRemaining

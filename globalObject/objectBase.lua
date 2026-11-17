@@ -49,5 +49,5 @@ function ObjectBase:draw(imageNo, scaleBonus)
     local image = self.images[imageNo or 1]
 
     love.graphics.setColor(self.colour or {1,1,1})
-    love.graphics.draw(image, self.x, self.y, self.r, self.sx + (scaleBonus or 0), self.sy + (scaleBonus or 0), self.ox, self.oy)
+    love.graphics.draw(image, self.x, self.y, self.r, self.sx * (scaleBonus or 1), self.sy * (scaleBonus or 1), self.ox, self.oy)
 end

@@ -32,8 +32,6 @@ function g.keypressed(key)
     if key == "space" then
         notebook:setOpen()
     elseif key == "t" then
-        --photo:permutate(3)
-        --phase = "spotting"
         gallery:nextPhoto()
     end
 end

@@ -39,7 +39,7 @@ function Photo:new(x, y, level)
 
 
     obj.level.loadObjects()
-    obj.objects = obj.level.generateObjects()
+    obj.objects, obj.bgColour = obj.level.generateObjects()
 
     -- obj:render(1)
     -- obj:render(2)
@@ -76,20 +76,20 @@ end
 function Photo:render(canvasNo, scaleHoverd)
     love.graphics.setCanvas(self.canvases[canvasNo])
     love.graphics.origin()
-    love.graphics.clear(1, 1, 1)
+    love.graphics.clear(self.bgColour or {1, 1, 1})
 
     local scaleIndex
     local scaleBonus
     if scaleHoverd then
         scaleIndex = self:getClosestObject(love.mouse.getPosition())
 
-        scaleBonus = (love.mouse.isDown(1) and -0.5) or 0.5 
+        scaleBonus = (love.mouse.isDown(1) and 0.8) or 1.2
     end
 
     for i = 1, #self.objects do
         local object = self.objects[i]
         love.graphics.setColor(1,1,1)
-        object:draw(canvasNo, (i == scaleIndex and scaleBonus) or 0)
+        object:draw(canvasNo, (i == scaleIndex and scaleBonus) or 1)
     end
 
     love.graphics.setCanvas()
