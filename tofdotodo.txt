@@ -9,7 +9,7 @@ level ideas:
         - trees
         - birds
         - animals
-    grid of symbols/objects
+    ✅ grid of symbols/objects
     inside a building
     ship with greebleing
     map

@@ -35,6 +35,7 @@ function ObjectBase:new(x, y, rx, ry, images, colour)
     obj.ox = images[1]:getWidth()/2
     obj.oy = images[1]:getHeight()/2
 
+
     setmetatable(obj, {
         __index = ObjectBase,
     })
@@ -43,9 +44,10 @@ function ObjectBase:new(x, y, rx, ry, images, colour)
     return obj
 end
 
-function ObjectBase:draw(imageNo)
+
+function ObjectBase:draw(imageNo, scaleBonus)
     local image = self.images[imageNo or 1]
 
     love.graphics.setColor(self.colour or {1,1,1})
-    love.graphics.draw(image, self.x, self.y, self.r, self.sx, self.sy, self.ox, self.oy)
+    love.graphics.draw(image, self.x, self.y, self.r, self.sx + (scaleBonus or 0), self.sy + (scaleBonus or 0), self.ox, self.oy)
 end

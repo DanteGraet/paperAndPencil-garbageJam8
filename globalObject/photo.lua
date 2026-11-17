@@ -31,7 +31,7 @@ function Photo:new(x, y, level)
 
     obj.canvases = {
         love.graphics.newCanvas(1400, 950),
-        love.graphics.newCanvas(1400, 950)
+        love.graphics.newCanvas(1400, 950),
     }
 
     setmetatable(obj, {
@@ -48,15 +48,49 @@ function Photo:new(x, y, level)
     return obj
 end
 
-function Photo:render(canvasNo)
+function Photo:getClosestObject(x, y)
+    local closestIndex
+
+    local mx, my = camera:translatePosition(x, y)
+    local closest = math.huge
+
+    for i = 1, #self.objects do
+        local object = self.objects[i]
+        local dx = mx - self.x - object.x
+        local dy = my - self.y - object.y
+
+        if (dx*dx)/(object.rx*object.sx*object.rx*object.sx) + (dy*dy)/(object.ry*object.sy*object.ry*object.sy) < 1 then
+            -- check if it is closer (dont need sqrt here)
+            local distance = dx*dx + dy*dy
+
+            if distance < closest then
+                closest = distance
+                closestIndex = i
+            end
+        end
+    end
+
+    return closestIndex, self.objects[closestIndex]
+end
+
+
+function Photo:render(canvasNo, scaleHoverd)
     love.graphics.setCanvas(self.canvases[canvasNo])
     love.graphics.origin()
     love.graphics.clear(1, 1, 1)
 
+    local scaleIndex
+    local scaleBonus
+    if scaleHoverd then
+        scaleIndex = self:getClosestObject(love.mouse.getPosition())
+
+        scaleBonus = (love.mouse.isDown(1) and -0.5) or 0.5 
+    end
+
     for i = 1, #self.objects do
         local object = self.objects[i]
         love.graphics.setColor(1,1,1)
-        object:draw(canvasNo)
+        object:draw(canvasNo, (i == scaleIndex and scaleBonus) or 0)
     end
 
     love.graphics.setCanvas()
@@ -70,6 +104,28 @@ function Photo:permutate(count)
 
     self:render(1)
     self:render(2)
+end
+
+
+function Photo:drawWithScaleBonus()
+    local canvasToDraw = math.floor((timer*5) % 2) + 1
+
+    self:render(canvasToDraw, true)
+    love.graphics.origin()
+    camera()
+
+    love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
+
+
+    -- CHEAT PLEASE REMOVE LATER
+    if DEV == true and love.keyboard.isDown("lshift") then
+        love.graphics.setColor(1,0, 0)
+        for i = 1,#self.changes do
+            local c = self.changes[i]
+            love.graphics.ellipse("line", c[1], c[2], c[3], c[4])
+        end
+        love.graphics.setColor(1,1,1)
+    end
 end
 
 

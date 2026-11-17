@@ -43,7 +43,10 @@ end
 
 function Notebook:setOpen(isOpen)
     self.isOpen = isOpen or not self.isOpen
-    
+
+    self:endDraw(nil, nil, true)    
+    self:endDraw(nil, nil, false)
+
     if self.isOpen == true then
         self:updatePageVisibility()
     else
@@ -91,7 +94,7 @@ function Notebook:startDraw(mx, my, erase)
 end
 
 function Notebook:endDraw(mx, my, erase)
-    if self.isOpen == false then return end
+    --if self.isOpen == false then return end
 
     self.pages[self.currentPage]:endDraw(mx, my, erase)
 end

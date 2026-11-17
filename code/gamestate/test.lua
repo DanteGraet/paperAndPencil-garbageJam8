@@ -3,12 +3,15 @@ local g = {}
 local notebook = {}
 local photo
 
+
 function g.load()
     notebook = Notebook(3)
     photo = Photo(65, 65, "grid")
 
     camera = Camera("fit", 1920, 1080)
     timer = 0
+
+    phase = "drawing"
 
     photo:render(1)
 end
@@ -27,22 +30,27 @@ function g.keypressed(key)
         notebook:setOpen()
     elseif key == "t" then
         photo:permutate(3)
+        phase = "spotting"
     end
 end
 
 function g.mousepressed(x, y, button)
-    if button == 1 then
-        notebook:startDraw(x, y, false)
-    elseif button == 2 then
-        notebook:startDraw(x, y, true)
+    if phase == "drawing" then
+        if button == 1 then
+            notebook:startDraw(x, y, false)
+        elseif button == 2 then
+            notebook:startDraw(x, y, true)
+        end
     end
 end
 
 function g.mousereleased(x, y, button)
-    if button == 1 then
-        notebook:endDraw(false)
-    elseif button == 2 then
-        notebook:endDraw(true)
+    if phase == "drawing" then
+        if button == 1 then
+            notebook:endDraw(false)
+        elseif button == 2 then
+            notebook:endDraw(true)
+        end
     end
 end
 
@@ -54,7 +62,12 @@ function g.draw()
     camera()
     love.graphics.setBackgroundColor(73/255, 142/255, 145/255)
     love.graphics.setColor(1,1,1)
-    photo:draw()
+
+    if phase == "drawing" then
+        photo:draw()
+    elseif phase == "spotting" then
+        photo:drawWithScaleBonus()
+    end
 
     notebook:draw()
 end

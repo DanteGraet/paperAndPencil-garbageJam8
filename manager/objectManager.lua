@@ -18,7 +18,6 @@ function objectManager.flush()
 end
 
 function objectManager.load(filePath, name, tags)
-    print(filePath)
     local obj = love.filesystem.load(filePath)()
 
     objects[name] = obj
