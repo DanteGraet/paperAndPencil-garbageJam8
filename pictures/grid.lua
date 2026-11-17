@@ -1,7 +1,7 @@
 local level = {}
 
 -- viewing time in secconds
-level.time = 60
+level.time = 15
 local swapChance = 0
 
 function level.loadObjects()

@@ -1,6 +1,16 @@
 Gallery = {}
 Gallery.__index = Gallery
 
+local clockImages = {
+    clock = {
+        love.graphics.newImage("assets/ui/clock1.png"),
+        love.graphics.newImage("assets/ui/clock2.png"),
+    },
+    hand = {
+        love.graphics.newImage("assets/ui/hand1.png"),
+        love.graphics.newImage("assets/ui/hand2.png"),
+    }
+}
 
 setmetatable(Gallery, {
     __call = function(self, size)
@@ -32,6 +42,7 @@ function Gallery:new(size)
     })
 
     obj.timeRemaining = obj.pictures[obj.currentPhoto].level.time
+    obj.lastTimeRemaining = 0
     
     obj:render()
 
@@ -51,6 +62,8 @@ end
 
 function Gallery:nextPhoto()
     self.currentPhoto = self.currentPhoto + 1
+
+    
     self:render()
 
     if self.currentPhoto > #self.pictures and phase ~= "spotting" then
@@ -63,14 +76,19 @@ function Gallery:nextPhoto()
         if self.pictures[self.currentPhoto] then
             self.pictures[self.currentPhoto]:permutate(math.random(3, 5))
         end
+    else
+        self.lastTimeRemaining = self.timeRemaining
+        self.timeRemaining = self.pictures[self.currentPhoto].level.time
     end
 end
 
 
 function Gallery:update(dt)
-    self.timeRemaining = self.timeRemaining - dt
-    if self.timeRemaining < 0 then 
-        self:nextPhoto()
+    if phase == "drawing" then
+        self.timeRemaining = self.timeRemaining - dt
+        if self.timeRemaining < 0 then 
+            self:nextPhoto()
+        end
     end
 
     -- in thoeryu thus works cause current photo dont go down
@@ -92,6 +110,8 @@ end
 
 
 function Gallery:draw()
+    local clockToDraw = math.floor((timer*5) % 2) + 1
+
     for i = math.floor(self.visualPhoto), math.ceil(self.visualPhoto) do
         local photo = self.pictures[i]
 
@@ -102,9 +122,33 @@ function Gallery:draw()
         if photo then
             if phase == "drawing" or i == 0 then
                 photo:draw()
+
+                local time = (i ~= self.currentPhoto and self.lastTimeRemaining) or self.timeRemaining
+                local angle = time/60*math.pi*2 - math.pi/2
+                
+                local c = 0
+                local ox, oy = 0, 0 
+                if time < 10 then
+                    c = (1-time/10)/2
+                end
+
+                if time < 5 then
+                    local r = math.random() * math.pi * 2
+                    local d = math.random() * (5-time)
+                    ox = math.cos(r)*d
+                    oy = math.sin(r)*d
+                end
+                love.graphics.setColor(0+c, 0, 0)
+                love.graphics.draw(clockImages.clock[clockToDraw], photo.x + 1400+100 + ox, 1030 - 367 + oy)
+                love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, 1, 1, 305/2, 214.5)
+                love.graphics.setColor(1, 1, 1)
+
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
             end
+
+
+
         end
     end
 end
