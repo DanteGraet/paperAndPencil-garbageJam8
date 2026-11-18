@@ -8,7 +8,7 @@ function level.loadObjects()
     objectManager.flush()
 
     objectManager.load("object/chess/chessPiece.lua", "chessPiece")
-    --objectManager.load("object/fruit/fruit.lua", "fruit")
+    objectManager.load("object/fruit/fruit.lua", "fruit")
 end
 
 

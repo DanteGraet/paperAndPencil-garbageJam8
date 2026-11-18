@@ -60,9 +60,6 @@ function ChessPiece:permutate()
     self.images = images[self.variant]
 
     self.hasMutated = true
-
-    -- return where the change happend and radii
-    return --{self.x + self.ox, self.y + self.oy, self.rx * self.sx, self.ry * self.sy}
 end
 
 return ChessPiece
