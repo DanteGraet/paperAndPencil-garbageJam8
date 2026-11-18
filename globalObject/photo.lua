@@ -5,6 +5,24 @@ local function sign(x)
     return (x > 0 and 1) or (x < 0 and -1) or 0
 end
 
+local frameImages = {
+    love.graphics.newImage("assets/ui/frame1.png"),
+    love.graphics.newImage("assets/ui/frame2.png")
+}
+
+local frameColours = {
+    {1, 1, 1},
+    {0, 1, 1},
+    {1, 0, 1},
+    {1, 1, 0},
+    {0, 0, 1},
+    {1, 0, 0},
+    {0, 1, 0},
+    {0, 0, 0},
+
+    {104/255, 171/255, 197/255},    -- jaraph blud
+    {54/255, 1/255, 63/255},        -- purple
+}
 
 Photo = {}
 Photo.__index = Photo
@@ -27,6 +45,8 @@ function Photo:new(x, y, level)
 
     obj.x = x
     obj.y = y
+
+    obj.frameColour = frameColours[math.random(1, #frameColours)]
 
     obj.canvases = {
         love.graphics.newCanvas(1400, 950),
@@ -138,6 +158,9 @@ function Photo:drawWithScaleBonus()
 
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
 
+    love.graphics.setColor(self.frameColour)
+    love.graphics.draw(frameImages[canvasToDraw], self.x - 50, self.y - 50)
+    love.graphics.setColor(1,1,1)
 
     self:drawDebug()
 end
@@ -146,6 +169,11 @@ end
 function Photo:draw()
     local canvasToDraw = math.floor((timer*5) % 2) + 1
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
+
+
+    love.graphics.setColor(self.frameColour)
+    love.graphics.draw(frameImages[canvasToDraw], self.x - 50, self.y - 50)
+    love.graphics.setColor(1,1,1)
 
     self:drawDebug()
 end
