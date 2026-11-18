@@ -6,20 +6,22 @@ ObjectBase.__index = ObjectBase
 
 
 setmetatable(ObjectBase, {
-    __call = function(self, x, y, rx, ry, images, colour)
-        return self:new(width, x, y, rx, ry, images, colour)
+    __call = function(self, x, y, images, colour)
+        return self:new(width, x, y, images, colour)
     end
 })
 
 
-function ObjectBase:new(x, y, rx, ry, images, colour)
+function ObjectBase:new(x, y, images, colour, colliders)
     local obj = {}
 
     obj.x = x
     obj.y = y
-    obj.rx = rx or 50
-    obj.ry = ry or 50
+    -- obj.rx = rx or 50
+    -- obj.ry = ry or 50
     obj.colour = colour
+
+    obj.colliders = colliders
 
 
     obj.images = images
@@ -34,6 +36,8 @@ function ObjectBase:new(x, y, rx, ry, images, colour)
 
     obj.ox = images[1]:getWidth()/2
     obj.oy = images[1]:getHeight()/2
+
+    obj.hasMutated = false
 
 
     setmetatable(obj, {

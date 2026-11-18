@@ -146,9 +146,6 @@ function Gallery:draw()
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
             end
-
-
-
         end
     end
 end

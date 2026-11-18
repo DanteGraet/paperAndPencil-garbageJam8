@@ -22,10 +22,18 @@ ChessPiece.__index = ChessPiece
 setmetatable(ChessPiece, {__index = ObjectBase})
 
 
-function ChessPiece:new(x, y, var)
+function ChessPiece:new(x, y, var, size)
     local variant = var or variants[math.random(1, #variants)]
-    local obj = ObjectBase:new(x, y, rx, ry, images[variant], colour)
 
+    local colliders = {
+        ElipticalCollider(0, 0, size*0.4 or 50, size*0.4 or 50)
+    }
+
+    local obj = ObjectBase:new(x, y, images[variant], colour, colliders)
+
+    obj.sx = (size or 100)/(obj.ox*2)
+    obj.sy = (size or 100)/(obj.ox*2)
+    
     obj.variant = variant
     obj.type = "ChessPiece"
 
@@ -51,8 +59,10 @@ function ChessPiece:permutate()
     self.variant = newVariant
     self.images = images[self.variant]
 
+    self.hasMutated = true
+
     -- return where the change happend and radii
-    return {self.x + self.ox, self.y + self.oy, self.rx * self.sx, self.ry * self.sy}
+    return --{self.x + self.ox, self.y + self.oy, self.rx * self.sx, self.ry * self.sy}
 end
 
 return ChessPiece

@@ -8,20 +8,20 @@ function level.loadObjects()
     objectManager.flush()
 
     objectManager.load("object/chess/chessPiece.lua", "chessPiece")
-    objectManager.load("object/fruit/fruit.lua", "fruit")
+    --objectManager.load("object/fruit/fruit.lua", "fruit")
 end
 
 
 function level.generateObjects()
     local o = {}
 
+    local objectSize = 250
+
     for x = 1,5 do
         for y = 1, 3 do
-            local obj = objectManager.getRandom():new(-50 + x*250, -25 + y*250)
-
+            local obj = objectManager.getRandom():new(-50 + x*250, -25 + y*250, nil, objectSize)
+            --local scale = 250/(obj.ox*2)
             -- only using sx for consistantcy or something
-            obj.sx = 250/(obj.ox*2)
-            obj.sy = 250/(obj.ox*2)
 
             obj.r = math.random(-100, 100)/200
 

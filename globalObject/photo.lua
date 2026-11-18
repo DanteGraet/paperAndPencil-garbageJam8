@@ -55,16 +55,17 @@ function Photo:getClosestObject(x, y)
 
     for i = 1, #self.objects do
         local object = self.objects[i]
-        local dx = mx - self.x - object.x
-        local dy = my - self.y - object.y
 
-        if (dx*dx)/(object.rx*object.sx*object.rx*object.sx) + (dy*dy)/(object.ry*object.sy*object.ry*object.sy) < 1 then
-            -- check if it is closer (dont need sqrt here)
-            local distance = dx*dx + dy*dy
+        local x, y = mx - self.x - object.x, my - self.y - object.y
 
-            if distance < closest then
-                closest = distance
-                closestIndex = i
+        if object.colliders then
+            for j = 1,#object.colliders do
+                local collision, distance = object.colliders[j]:checkCollision(x, y)
+
+                if collision and distance < closest then
+                    closest = distance
+                    closestIndex = i
+                end
             end
         end
     end
@@ -106,6 +107,28 @@ function Photo:permutate(count)
 end
 
 
+function Photo:drawDebug()
+    -- CHEAT PLEASE REMOVE LATER
+    if DEV == true and love.keyboard.isDown("lshift") then
+
+        for i = 1, #self.objects do
+            local object = self.objects[i]
+
+            if object.hasMutated == true then
+                love.graphics.setColor(1,0,0)
+            else
+                love.graphics.setColor(0,0,1)
+            end
+
+            if object.colliders then
+                for j = 1,#object.colliders do
+                    object.colliders[j]:draw(object.x + object.ox, object.y + object.oy)
+                end
+            end
+        end
+    end
+end
+
 function Photo:drawWithScaleBonus()
     local canvasToDraw = math.floor((timer*5) % 2) + 1
 
@@ -116,15 +139,7 @@ function Photo:drawWithScaleBonus()
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
 
 
-    -- CHEAT PLEASE REMOVE LATER
-    if DEV == true and love.keyboard.isDown("lshift") then
-        love.graphics.setColor(1,0, 0)
-        for i = 1,#self.changes do
-            local c = self.changes[i]
-            love.graphics.ellipse("line", c[1], c[2], c[3], c[4])
-        end
-        love.graphics.setColor(1,1,1)
-    end
+    self:drawDebug()
 end
 
 
@@ -132,13 +147,5 @@ function Photo:draw()
     local canvasToDraw = math.floor((timer*5) % 2) + 1
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
 
-    -- CHEAT PLEASE REMOVE LATER
-    if DEV == true and love.keyboard.isDown("lshift") then
-        love.graphics.setColor(1,0, 0)
-        for i = 1,#self.changes do
-            local c = self.changes[i]
-            love.graphics.circle("line", c[1], c[2], c[3])
-        end
-        love.graphics.setColor(1,1,1)
-    end
+    self:drawDebug()
 end

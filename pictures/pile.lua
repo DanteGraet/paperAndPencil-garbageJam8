@@ -14,7 +14,7 @@ function level.loadObjects()
     objectManager.flush()
 
     objectManager.load("object/chess/chessPiece.lua", "chessPiece")
-    objectManager.load("object/fruit/fruit.lua", "fruit")
+    --objectManager.load("object/fruit/fruit.lua", "fruit")
 end
 
 
@@ -31,11 +31,8 @@ function level.generateObjects()
             1400, 950
             ]]
 
-            local obj = objectManager.getRandom():new(700 + xPos, yPos)
+            local obj = objectManager.getRandom():new(700 + xPos, yPos, nil, size)
 
-            -- only using sx for consistantcy or something
-            obj.sx = size/(obj.ox*2)
-            obj.sy = size/(obj.ox*2)
 
             obj.r = math.random(-100, 100)/100
 
