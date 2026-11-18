@@ -82,6 +82,13 @@ function Gallery:nextPhoto()
     end
 end
 
+function Gallery:mousereleased(x, y)
+    if phase == "spotting" then
+        if self.pictures[self.currentPhoto] then
+            self.pictures[self.currentPhoto]:addToFinds(x, y)
+        end
+    end
+end
 
 function Gallery:update(dt)
     if phase == "drawing" then
@@ -145,6 +152,8 @@ function Gallery:draw()
 
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
+
+                photo:drawFinds()
             end
         end
     end

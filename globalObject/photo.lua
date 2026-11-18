@@ -10,6 +10,30 @@ local frameImages = {
     love.graphics.newImage("assets/ui/frame2.png")
 }
 
+local findImages = {
+    miss = {
+        love.graphics.newImage("assets/ui/finds/miss1.png"),
+        love.graphics.newImage("assets/ui/finds/miss2.png"),
+    },
+    outline = {
+        love.graphics.newImage("assets/ui/finds/correct1.png"),
+        love.graphics.newImage("assets/ui/finds/correct2.png"),
+    },
+    incorrect = {
+        love.graphics.newImage("assets/ui/finds/incorrect1.png"),
+        love.graphics.newImage("assets/ui/finds/incorrect2.png"),
+    },
+}
+
+local grades = {
+    {"S", 1},
+    {"A", 0.85},
+    {"B", 0.7},
+    {"C", 0.6},
+    {"D", 0.5},
+    {"F", 0},
+}
+
 local frameColours = {
     {1, 1, 1},
     {0, 1, 1},
@@ -46,6 +70,9 @@ function Photo:new(x, y, level)
     obj.x = x
     obj.y = y
 
+    obj.finds = {}
+    obj.findImage = math.random(1, 2)
+
     obj.frameColour = frameColours[math.random(1, #frameColours)]
 
     obj.canvases = {
@@ -66,6 +93,46 @@ function Photo:new(x, y, level)
 
     return obj
 end
+
+function Photo:getScore()
+    if #self.finds == 0 then
+        return 0
+    end
+
+    -- Actually math
+    local count = #self.objects
+    local totalModifications = 0
+    for i = 1,#self.objects do
+        if self.objects[i].hasMutated == true then
+            totalModifications = totalModifications + 1
+        end
+    end
+
+    local foundModifications = 0
+    local incorectIdentifications = 0
+    for i = 1,#self.finds do
+        local find = self.objects[self.finds[i][1]]
+
+        if self.finds[i][2] == "miss" then
+
+        else
+            if find.hasMutated == true then
+                foundModifications = foundModifications + 1
+            else
+                incorectIdentifications = incorectIdentifications + 1
+            end
+        end
+    end
+
+    local foundPortion = foundModifications / totalModifications
+    local wrongPortion = incorectIdentifications / (count - totalModifications)
+
+    local score = (foundPortion / 2 + 0.5) * (1 - wrongPortion)
+
+
+    return score
+end
+
 
 function Photo:getClosestObject(x, y)
     local closestIndex
@@ -91,6 +158,32 @@ function Photo:getClosestObject(x, y)
     end
 
     return closestIndex, self.objects[closestIndex]
+end
+
+
+function Photo:addToFinds(x, y)
+    local mx, my = camera:translatePosition(x, y)
+    local index, object = self:getClosestObject(x, y)
+
+    for i = 1, #self.finds do
+        if self.finds[i][1] == index then
+            return
+        end
+    end
+
+    if index then
+        local outline = "incorrect"
+
+        if object.hasMutated == true then
+            outline = "correct"
+        end
+
+        local t = {index, outline}
+        print("adding iFind")
+
+        table.insert(self.finds, t)
+    end
+
 end
 
 
@@ -128,7 +221,6 @@ end
 
 
 function Photo:drawDebug()
-    -- CHEAT PLEASE REMOVE LATER
     if DEV == true and love.keyboard.isDown("lshift") then
 
         for i = 1, #self.objects do
@@ -176,4 +268,54 @@ function Photo:draw()
     love.graphics.setColor(1,1,1)
 
     self:drawDebug()
+end
+
+function Photo:drawFinds()
+    local canvasToDraw = math.floor(((timer*5) + self.findImage) % 2) + 1
+
+    love.graphics.setLineWidth(4)
+    if #self.finds == 0 then return end
+
+    for i = 1, #self.finds do
+        local x = self.x + 1500 + (125+35)*((i-1) % 2)
+        local y = self.y + math.floor((i-1)/2)*(125+35)
+
+        local object = self.objects[self.finds[i][1]]
+        local image = object.images[canvasToDraw]
+
+        local scale = math.min(125/image:getWidth(), 125/image:getHeight())
+
+        if self.finds[i][2] == "correct" then
+
+        else
+            love.graphics.setColor(0.5, 0.5, 0.5)
+        end
+
+        love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
+
+        love.graphics.draw(image, x, y, 0, scale, scale)
+
+        love.graphics.setColor(1, 1, 1)
+
+
+        if findImages[self.finds[i][2]] then
+            love.graphics.draw(findImages[self.finds[i][2]][canvasToDraw], x - 10, y - 10)
+
+        end
+    end
+
+    -- We aint drawing this anyumore
+    -- fontManager.set("quindocha", 128)
+    -- love.graphics.setColor(0, 0, 0)
+
+    -- local letter
+    -- local score = self:getScore()
+    -- for i = 1,#grades do
+    --     if score > grades[i][2] then
+    --         letter = grades[i][1]
+    --         break
+    --     end
+    -- end
+
+    -- love.graphics.print(letter, self.x + 1500, self.y + 850)
 end

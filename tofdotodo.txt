@@ -57,3 +57,8 @@ Spot the difference
 Paper & pencil
     ✅Open/close canvas
     ✅Draw on canvas (ig points and md for line)
+
+
+
+Score
+(#objects - modsMade + ModsFound - Fails) / #objects 
