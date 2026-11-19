@@ -89,7 +89,7 @@ function g.draw()
     notebook:draw()
 
     if gallery.visualPhoto < 1 and phase == "drawing" then
-        love.graphics.draw(lastFrameCanvas, -gallery.visualPhoto * 1920, 0)
+        love.graphics.draw(lastFrameCanvas, -gallery.visualPhotoSine * 1920, 0)
     end
 end
 

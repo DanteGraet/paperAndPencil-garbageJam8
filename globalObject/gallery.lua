@@ -40,6 +40,7 @@ function Gallery:new(size, timeScale)
 
     obj.currentPhoto = 1
     obj.visualPhoto = 0
+    obj.visualPhotoSine = 0
 
     obj.timeScale = timeScale or 1
 
@@ -110,16 +111,19 @@ function Gallery:update(dt)
     if self.visualPhoto < self.currentPhoto then
         self.visualPhoto = math.min(self.visualPhoto + dt, self.currentPhoto)
 
+        self.visualPhotoSine = math.floor(self.visualPhoto) + tweens.sineInOut(self.visualPhoto % 1)
+
         for i = 1, #self.pictures do
             local photo = self.pictures[i]
-            photo.x = 65 - (self.visualPhoto-i)*1920
+            photo.x = 65 - (self.visualPhotoSine-i)*1920
         end
     end
+
 
     -- edge case haha
     if self.visualPhoto < 1 and phase == "spotting" then
         local photo = self.pictures[#self.pictures]
-        photo.x = 65 - (self.visualPhoto)*1920
+        photo.x = 65 - (self.visualPhotoSine)*1920
     end
 end
 

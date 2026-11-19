@@ -88,7 +88,7 @@ function Notebook:wheelmoved(x, y)      -- i would wheelMoved but consistency or
     self.currentPage = self.currentPage + sign(y)
 
     if self.currentPage > #self.pages then
-        self.currentPage = 1
+        self.currentPage = 0
     elseif self.currentPage < 1 then
         self.currentPage = #self.pages
     end
