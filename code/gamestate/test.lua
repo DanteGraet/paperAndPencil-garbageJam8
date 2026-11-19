@@ -23,6 +23,14 @@ function g.load(diff, lf)
     love.mouse.setVisible(true)
 
     --photo:render(1)
+
+    audioManager.setTargets({
+        always =    1,
+        draw =      1,
+        guess =     0,
+        piano =     1,
+        stress =    0,
+    })
 end
 
 function g.resize()

@@ -139,6 +139,14 @@ function Gallery:nextPhoto()
         phase = "spotting"
         self.currentPhoto = 1
         self.visualPhoto = 0
+
+        audioManager.setTargets({
+            always =    1,
+            draw =      0,
+            guess =     1,
+            piano =     0.5,
+            stress =    0,
+        })
     end
 
     if self.pictures[self.currentPhoto] then
@@ -147,6 +155,14 @@ function Gallery:nextPhoto()
                 self.pictures[self.currentPhoto]:permutate()
             end
         else
+            audioManager.setTargets({
+                always =    1,
+                draw =      1,
+                guess =     0,
+                piano =     1,
+                stress =    0,
+            })
+
             self.lastTimeRemaining = self.timeRemaining
             self.timeRemaining = (self.pictures[self.currentPhoto].level.time or 60) * self.timeScale
         end
@@ -177,7 +193,19 @@ function Gallery:nextPhoto()
             end
         end
 
+        audioManager.setTargets({
+            always =    0.5,
+            draw =      0,
+            guess =     1,
+            piano =     0,
+            stress =    0,
+        })
+
         tut.generateTextList()
+
+    else
+        self.lastTimeRemaining = self.timeRemaining
+        self.timeRemaining = (math.huge) * self.timeScale
     end
 end
 
@@ -189,11 +217,24 @@ function Gallery:mousereleased(x, y)
     end
 end
 
+local dodgeFlipFlop = false
 function Gallery:update(dt)
     if phase == "drawing" then
         self.timeRemaining = self.timeRemaining - dt
+
+        if self.timeRemaining < 6 and dodgeFlipFlop == false then
+            audioManager.setTargets({
+                always =    0.5,
+                draw =      1,
+                guess =     0,
+                piano =     0,
+                stress =    1,
+            })
+            dodgeFlipFlop = true
+        end
         if self.timeRemaining < 0 then 
             self:nextPhoto()
+            dodgeFlipFlop = false
         end
     end
 

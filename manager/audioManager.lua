@@ -89,3 +89,82 @@ function audioManager.removeLoopingSound(name)
         loopingSounds[name] = nil
     end
 end
+
+
+
+
+
+--music = {} --table for music functions and variables
+
+
+local musicTracks = {}
+local musicTargets = {}
+local crossFadeSpeed = 1
+local masterTrack
+
+
+function audioManager.unloadBackgroundMusic()
+    if musicTracks then
+        for i = 1, #musicTracks do
+            musicTracks[i].track:stop()
+        end
+    end
+
+    musicTracks = {} --this MUST be nil and not empty table!! for now.
+    musicTargets = {} --this MUST be nil and not empty table!! for now.
+end
+
+
+function audioManager.addBackgroundTrack(path, name, target)
+    musicTracks[name] = love.audio.newSource(path, "stream")
+    musicTracks[name]:setVolume(0.0001)
+    musicTargets[name] = target or 1
+
+    if not masterTrack then
+        masterTrack = name
+    end
+end
+
+
+function audioManager.beBackgroundQuite(dt, abrupt)
+    if musicTargets then
+        for key, value in pairs(musicTargets) do
+            musicTargets[key] = 0
+        end
+
+        if abrupt then
+            for key, value in pairs(musicTracks) do
+                musicTracks[key]:setVolume(0.001)
+            end
+        end
+    end
+end
+
+function audioManager.setTargets(data)
+    for key, value in pairs(data) do
+        if musicTargets[key] then
+            musicTargets[key] = value
+        end
+    end
+end
+
+
+function audioManager.manageBackground(dt)
+    if musicTracks[masterTrack] then
+
+        if not musicTracks[masterTrack]:isPlaying() then
+            print("restart Tracjk")
+            for key, value in pairs(musicTracks) do
+                musicTracks[key]:play()
+            end
+        end
+
+        for key, value in pairs(musicTracks) do
+            local target = musicTargets[key] -- * MUSIC VOLUME
+            local current = musicTracks[key]:getVolume()
+            local diff = target - current
+            
+            musicTracks[key]:setVolume(quindoc.clamp(current + quindoc.sign(diff) * dt * crossFadeSpeed, 0.00001,1))
+        end
+    end
+end

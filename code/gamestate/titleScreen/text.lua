@@ -26,32 +26,32 @@ function text.generateTextList()
             text = "Jot the Difference"
         },
         {
-            x = 32, y = 32+128, size = 64, interact = false, speed = 0.05,
+            x = 32, y = 32+128, size = 64, interact = false, speed = 0.03,
             text = "(SPACE) toggle notebook"
         },
         {
-            x = 32, y = 32+128*1.5, size = 64, interact = false, speed = 0.02,
+            x = 32, y = 32+128*1.5, size = 64, interact = false, speed = 0.01,
             text = "(SCROLL) next page"
         },
         {
-            x = 32, y = 32+128*2, size = 64, interact = false, speed = 0.02,
+            x = 32, y = 32+128*2, size = 64, interact = false, speed = 0.01,
             text = "(RMB) draw"
         },
         {
-            x = 32, y = 32+128*2.5, size = 64, interact = false, speed = 0.02,
+            x = 32, y = 32+128*2.5, size = 64, interact = false, speed = 0.01,
             text = "(LMB) erase"
         },
         {
-            x = 32, y = 32+128*3, size = 64, interact = false, speed = 0.02,
+            x = 32, y = 32+128*3, size = 64, interact = false, speed = 0.03,
             text = "Draw what you see"
         },
 
         {
-            x = 32, y = 1080 - 32 - 64, size = 64, interact = true, speed = 0.02,
+            x = 32, y = 1080 - 32 - 64, size = 64, interact = true, speed = 0.01,
             text = "--O-- Music"
         },
         {
-            x = 32, y = 1080 - 32 - 128, size = 64, interact = true, speed = 0.02,
+            x = 32, y = 1080 - 32 - 128, size = 64, interact = true, speed = 0.01,
             text = "--O-- SFX"
         },
 
@@ -70,7 +70,7 @@ function text.generateTextList()
 
     table.insert(textList,
         {
-            x = 1530, y = 1080 - 32 - 64 * (displayCount+1), size = 64, interact = false, speed = 0.03,
+            x = 1530, y = 1080 - 32 - 64 * (displayCount+1), size = 64, interact = false, speed = 0.02,
             text = "Play"
         }
     )
@@ -114,8 +114,8 @@ function text.update(dt, isNotebookOpen)
         timer = timer + textList[linesToDraw].speed
 
         if charToDraw > #current and isNotebookOpen == false then
+            timer = timer + textList[linesToDraw].speed * 25
             linesToDraw = linesToDraw + 1
-            timer = timer + 0.5
             charToDraw = 0
         end
     end

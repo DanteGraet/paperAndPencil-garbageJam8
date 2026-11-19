@@ -14,6 +14,14 @@ function g.load()
 
     love.mouse.setVisible(true)
 
+    audioManager.setTargets({
+        always =    1,
+        draw =      0,
+        guess =     0,
+        piano =     0.75,
+        stress =    0,
+    })
+
 end
 
 function g.resize()

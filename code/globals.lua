@@ -25,6 +25,14 @@ audio = {
     erase = love.audio.newSource("assets/audio/erase.ogg", "static"),
 }
 
+audioManager.addBackgroundTrack("assets/audio/music/always.ogg" ,"always"   ,1)
+audioManager.addBackgroundTrack("assets/audio/music/draw.ogg"   ,"draw"     ,0)
+audioManager.addBackgroundTrack("assets/audio/music/guess.ogg"  ,"guess"    ,0)
+audioManager.addBackgroundTrack("assets/audio/music/piano.ogg"  ,"piano"    ,.75)
+audioManager.addBackgroundTrack("assets/audio/music/stress.ogg" ,"stress"   ,0)
+
+addEvent("update", audioManager.manageBackground, 1)
+
 function love.quit()
     love.filesystem.write("hiscore.jt", highscores)
 end
