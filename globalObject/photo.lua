@@ -10,10 +10,6 @@ local frameImages = {
     love.graphics.newImage("assets/ui/frame2.png")
 }
 
-local nextImages = {
-    love.graphics.newImage("assets/ui/next1.png"),
-    love.graphics.newImage("assets/ui/next2.png")
-}
 
 local findImages = {
     miss = {
@@ -276,7 +272,7 @@ end
 function Photo:drawFinds(col, ox, oy)
     local canvasToDraw = math.floor(((timer*5) + self.findImage) % 2) + 1
 
-    love.graphics.draw(nextImages[canvasToDraw], self.x + 1500 -10, self.y + 5*(125+35) + 10)
+    -- love.graphics.draw(nextImages[canvasToDraw], self.x + 1500 -10, self.y + 5*(125+35) + 10)
 
 
     love.graphics.setLineWidth(4)

@@ -6,6 +6,12 @@ local frameImages = {
     love.graphics.newImage("assets/ui/frame2.png")
 }
 
+local nextImages = {
+    love.graphics.newImage("assets/ui/next1.png"),
+    love.graphics.newImage("assets/ui/next2.png")
+}
+
+
 local grades = {
     {"S", 1},
     {"A", 0.85},
@@ -250,17 +256,20 @@ function Gallery:draw()
                 photo:drawWithScaleBonus()
 
                 photo:drawFinds(2, photo.x + 1500, photo.y)
+                love.graphics.draw(nextImages[clockToDraw], photo.x + 1500 -10, photo.y + 5*(125+35) + 10)
             end
         else
             if i == #self.pictures + 1 and i == math.ceil(self.visualPhoto) and  phase == "spotting" then
                 local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
                 self:displayScore(1920 * sine)
+                love.graphics.setColor(1, 1, 1)
+                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 + 1920 * sine, 65 + 5*(125+35) + 10)
 
             elseif i == #self.pictures + 2 and phase == "spotting" then
                 local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
                 love.graphics.translate(1920 * sine, 0)
 
-
+                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 - 1920, 65 + 5*(125+35) + 10)
                 self:displayScore(-1920)
                 tut.draw(false)
 
@@ -269,6 +278,8 @@ function Gallery:draw()
                 end
                 love.graphics.translate(-1920 * sine, 0)
 
+            else
+                --love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10, 65 + 5*(125+35) + 10)
             end
         end
     end
