@@ -6,8 +6,8 @@ difficultyScale = {
     {name = "Hard"        , photos = 3, pages = 3, timeMult = 0.8},
     {name = "Extra"       , photos = 4, pages = 4, timeMult = 1},
     {name = "Deficiency"  , photos = 3, pages = 2, timeMult = 1},
-    {name = "Diabolical"  , photos = 5, pages = 3, timeMult = 1.5},
-    {name = "Good luck"   , photos = 5, pages = 2, timeMult = 1},
+    {name = "Diabolical"  , photos = 5, pages = 3, timeMult = 0.9},
+    {name = "Good luck"   , photos = 5, pages = 2, timeMult = 0.7},
 }
 
 -- load highscores & settings

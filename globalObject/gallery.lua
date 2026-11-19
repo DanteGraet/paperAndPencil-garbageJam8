@@ -13,7 +13,7 @@ local nextImages = {
 
 
 local grades = {
-    {"S", 1},
+    {"S", 0.99},
     {"A", 0.85},
     {"B", 0.7},
     {"C", 0.6},

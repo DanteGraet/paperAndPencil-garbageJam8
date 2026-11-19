@@ -79,5 +79,5 @@ Normal      3       3       1
 Hard        3       3       0.8
 Extreme     4       4       1
 Brutal      3       2       1
-Diabolical  5       3       1.5
+Diabolical  5       3       .9
 Good Luck   5       2       1
