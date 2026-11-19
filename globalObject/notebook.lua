@@ -95,7 +95,7 @@ function Notebook:wheelmoved(x, y)      -- i would wheelMoved but consistency or
 end
 
 function Notebook:startDraw(mx, my, erase)
-    if self.isOpen == false then return  end
+    if self.isOpen == false then return end
 
     self.pages[self.currentPage]:startDraw(mx, my, erase)
 end

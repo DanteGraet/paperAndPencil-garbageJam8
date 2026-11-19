@@ -37,26 +37,27 @@ function g.keypressed(key)
 end
 
 function g.mousepressed(x, y, button)
-    if phase == "drawing" then
-        if button == 1 then
-            notebook:startDraw(x, y, false)
-        elseif button == 2 then
-            notebook:startDraw(x, y, true)
-        end
+    if button == 1 then
+        notebook:startDraw(x, y, false)
+    elseif button == 2 then
+        notebook:startDraw(x, y, true)
     end
 end
 
 function g.mousereleased(x, y, button)
-    if phase == "drawing" then
+    if notebook.isOpen == true then
+        --if phase == "drawing" then
         if button == 1 then
             notebook:endDraw(false)
         elseif button == 2 then
             notebook:endDraw(true)
         end
-    end
+    -- end
+    else
 
-    if button == 1 then
-        gallery:mousereleased(x, y)
+        if button == 1 then
+            gallery:mousereleased(x, y)
+        end
     end
 end
 

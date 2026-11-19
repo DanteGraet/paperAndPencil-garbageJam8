@@ -190,7 +190,6 @@ function Photo:addToFinds(x, y)
         end
 
         local t = {index, outline}
-        print("adding iFind")
 
         table.insert(self.finds, t)
     end
@@ -221,8 +220,6 @@ end
 
 
 function Photo:permutate(count)
-    print("MUtating")
-
     self.changes = self.level.permutate(self.objects, count or 3)
 
     self:render(1)
