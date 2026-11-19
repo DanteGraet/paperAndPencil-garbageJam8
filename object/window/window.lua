@@ -1,12 +1,14 @@
 local variants = {
-    "frame",
     "2d",
     "3d",
     "2l",
     "3l",
 }
 
-local images = {}
+local images = {
+    love.graphics.newImage("object/window/" .. "frame" .. "1.png"),
+    love.graphics.newImage("object/window/" .. "frame" .. "2.png")
+}
 for i = 1, #variants do
     images[variants[i]] = {
         love.graphics.newImage("object/window/" .. variants[i] .. "1.png"),
