@@ -10,6 +10,11 @@ local frameImages = {
     love.graphics.newImage("assets/ui/frame2.png")
 }
 
+local nextImages = {
+    love.graphics.newImage("assets/ui/next1.png"),
+    love.graphics.newImage("assets/ui/next2.png")
+}
+
 local findImages = {
     miss = {
         love.graphics.newImage("assets/ui/finds/miss1.png"),
@@ -149,7 +154,7 @@ function Photo:getClosestObject(x, y)
             for j = 1,#object.colliders do
                 local collision, distance = object.colliders[j]:checkCollision(x, y)
 
-                if collision and distance < closest then
+                if collision and distance <= closest then
                     closest = distance
                     closestIndex = i
                 end
@@ -162,6 +167,12 @@ end
 
 
 function Photo:addToFinds(x, y)
+
+    if #self.finds >= 10 then
+        -- Play Sound
+        return
+    end
+
     local mx, my = camera:translatePosition(x, y)
     local index, object = self:getClosestObject(x, y)
 
@@ -183,7 +194,6 @@ function Photo:addToFinds(x, y)
 
         table.insert(self.finds, t)
     end
-
 end
 
 
@@ -273,12 +283,15 @@ end
 function Photo:drawFinds()
     local canvasToDraw = math.floor(((timer*5) + self.findImage) % 2) + 1
 
+    love.graphics.draw(nextImages[canvasToDraw], self.x + 1500 -10, self.y + 5*(125+35) + 10)
+
+
     love.graphics.setLineWidth(4)
     if #self.finds == 0 then return end
 
     for i = 1, #self.finds do
         local x = self.x + 1500 + (125+35)*((i-1) % 2)
-        local y = self.y + math.floor((i-1)/2)*(125+35)
+        local y = self.y + math.floor((i-1)/2)*(125+35) + 10
 
         local object = self.objects[self.finds[i][1]]
         local image = object.images[canvasToDraw]
@@ -303,6 +316,8 @@ function Photo:drawFinds()
 
         end
     end
+
+    -- Draw the next button also shhhh
 
     -- We aint drawing this anyumore
     -- fontManager.set("quindocha", 128)

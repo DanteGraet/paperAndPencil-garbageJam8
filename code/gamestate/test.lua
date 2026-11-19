@@ -54,13 +54,12 @@ function g.mousereleased(x, y, button)
             notebook:endDraw(true)
         end
     end
-end
 
-function g.mousereleased(x, y, button)
     if button == 1 then
         gallery:mousereleased(x, y)
     end
 end
+
 
 function g.wheelmoved(x, y)
     notebook:wheelmoved(x, y)

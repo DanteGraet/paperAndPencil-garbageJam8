@@ -7,8 +7,10 @@ local swapChance = 0
 function level.loadObjects()
     objectManager.flush()
 
-    objectManager.load("object/chess/chessPiece.lua", "chessPiece")
-    objectManager.load("object/fruit/fruit.lua", "fruit")
+    objectManager.load("object/chess/chessPiece.lua", "chessPiece", {"full"})
+    objectManager.load("object/fruit/fruit.lua", "fruit", {"full"})
+    
+    objectManager.load("object/empty.lua", "empty")
 end
 
 
@@ -24,6 +26,10 @@ function level.generateObjects()
             -- only using sx for consistantcy or something
 
             obj.r = math.random(-100, 100)/200
+
+            if math.random(1, 7) == 1 then
+                obj = objectManager.get("empty"):new(-50 + x*250, -25 + y*250, nil, objectSize)
+            end
 
             table.insert(o, obj)
         end

@@ -24,18 +24,23 @@ function ObjectBase:new(x, y, images, colour, colliders)
     obj.colliders = colliders
 
 
-    obj.images = images
-    if math.random(1, 2) == 1 then      -- randomly flip the images
-        images[1], images[2] = images[2], images[1]
+    if images then
+        obj.images = images
+        if math.random(1, 2) == 1 then      -- randomly flip the images
+            images[1], images[2] = images[2], images[1]
+        end
+
+        -- these can be manually changed ig
+        obj.sx = 1
+        obj.sy = 1
+        obj.r = 0
+
+        obj.ox = images[1]:getWidth()/2
+        obj.oy = images[1]:getHeight()/2
+    else
+        obj.ox = 0
+        obj.oy = 0
     end
-
-    -- these can be manually changed ig
-    obj.sx = 1
-    obj.sy = 1
-    obj.r = 0
-
-    obj.ox = images[1]:getWidth()/2
-    obj.oy = images[1]:getHeight()/2
 
     obj.hasMutated = false
 

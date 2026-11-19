@@ -66,19 +66,21 @@ function Gallery:nextPhoto()
     
     self:render()
 
-    if self.currentPhoto > #self.pictures and phase ~= "spotting" then
+    if self.currentPhoto > #self.pictures + 1 and phase ~= "spotting" then
         phase = "spotting"
         self.currentPhoto = 1
         self.visualPhoto = 0
     end
 
-    if phase == "spotting" then
-        if self.pictures[self.currentPhoto] then
-            self.pictures[self.currentPhoto]:permutate()
+    if self.pictures[self.currentPhoto] then
+        if phase == "spotting" then
+            if self.pictures[self.currentPhoto] then
+                self.pictures[self.currentPhoto]:permutate()
+            end
+        else
+            self.lastTimeRemaining = self.timeRemaining
+            self.timeRemaining = self.pictures[self.currentPhoto].level.time
         end
-    else
-        self.lastTimeRemaining = self.timeRemaining
-        self.timeRemaining = self.pictures[self.currentPhoto].level.time
     end
 end
 
@@ -122,9 +124,9 @@ function Gallery:draw()
     for i = math.floor(self.visualPhoto), math.ceil(self.visualPhoto) do
         local photo = self.pictures[i]
 
-        if i == 0 and phase == "spotting" then
-            photo = self.pictures[#self.pictures]
-        end
+        -- if i == 0 and phase == "spotting" then
+        --     photo = self.pictures[#self.pictures]
+        -- end
 
         if photo then
             if phase == "drawing" or i == 0 then
