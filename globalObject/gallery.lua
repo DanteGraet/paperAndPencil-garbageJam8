@@ -19,7 +19,7 @@ setmetatable(Gallery, {
 })
 
 
-function Gallery:new(size)
+function Gallery:new(size, timeScale)
     math.randomseed(os.time(), love.timer.getTime())
 
     local obj = {}
@@ -41,11 +41,13 @@ function Gallery:new(size)
     obj.currentPhoto = 1
     obj.visualPhoto = 0
 
+    obj.timeScale = timeScale or 1
+
     setmetatable(obj, {
         __index = Gallery,
     })
 
-    obj.timeRemaining = obj.pictures[obj.currentPhoto].level.time
+    obj.timeRemaining = ((obj.pictures[obj.currentPhoto] and obj.pictures[obj.currentPhoto].level.time) or 60) * obj.timeScale
     obj.lastTimeRemaining = 0
     
     obj:render()
@@ -83,7 +85,7 @@ function Gallery:nextPhoto()
             end
         else
             self.lastTimeRemaining = self.timeRemaining
-            self.timeRemaining = self.pictures[self.currentPhoto].level.time
+            self.timeRemaining = self.pictures[self.currentPhoto].level.time * self.timeScale
         end
     end
 end

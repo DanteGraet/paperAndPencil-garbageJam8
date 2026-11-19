@@ -291,7 +291,7 @@ function Photo:drawFinds()
         local y = self.y + math.floor((i-1)/2)*(125+35) + 10
 
         local object = self.objects[self.finds[i][1]]
-        local image = object.images[canvasToDraw]
+        local image = (object.images and object.images[canvasToDraw]) or nil
 
         local scale = math.min(125/image:getWidth(), 125/image:getHeight())
 
@@ -303,7 +303,9 @@ function Photo:drawFinds()
 
         love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
 
-        love.graphics.draw(image, x, y, 0, scale, scale)
+        if image then
+            love.graphics.draw(image, x, y, 0, scale, scale)
+        end
 
         love.graphics.setColor(1, 1, 1)
 

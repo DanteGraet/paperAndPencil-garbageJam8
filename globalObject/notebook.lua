@@ -14,7 +14,7 @@ local pencilImage = {
 Notebook = {}
 Notebook.__index = Notebook
 
-fontManager.loadFont("assets/QuindocahLite.ttf", "quindocha")
+
 
 setmetatable(Notebook, {
     __call = function(self, size)
@@ -35,13 +35,15 @@ function Notebook:new(size)
     end
 
     obj.currentPage = size
-    obj.isOpen = true
+    obj.isOpen = false
 
     setmetatable(obj, {
         __index = Notebook,
     })
 
-    obj:updatePageVisibility(isVisible)
+    obj:setOpen(false)
+    obj:updatePageVisibility(false)
+    obj:update(1)
 
     return obj
 end
@@ -60,7 +62,7 @@ function Notebook:setOpen(isOpen)
 
     love.mouse.setVisible(not self.isOpen)
 end
-
+ 
 function Notebook:updatePageVisibility(isVisible)
     if isVisible ~= nil then
         for i = 1,#self.pages do
@@ -127,9 +129,9 @@ function Notebook:draw()
         love.graphics.setColor(1,1,1)
         if self.pages[self.currentPage].isDrawing == true then
             if self.pages[self.currentPage].erase == true then
-                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 5, -1, -1)
+                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 4, -1, -1)
             else
-                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 5, 1, 1, 50, 51)
+                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 4, 1, 1, 50, 51)
             end
         else
             love.graphics.draw(pencilImage[frame], mx - 50, my - 51)

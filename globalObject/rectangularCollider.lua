@@ -28,7 +28,6 @@ function RectangularCollider:checkCollision(x, y)
     local collision = false
     local distance = math.huge
 
-
     local dx = x - (self.x + self.sx/2)
     local dy = y - (self.y + self.sy/2)
 

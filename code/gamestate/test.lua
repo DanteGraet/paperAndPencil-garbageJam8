@@ -3,9 +3,15 @@ local g = {}
 local notebook = {}
 local photo
 local gallery
+local difficulty
+local lastFrameCanvas
 
-function g.load()
-    notebook = Notebook(3)
+function g.load(diff, lf)
+    difficulty = diff or 2
+    lastFrameCanvas = lf
+
+    notebook = Notebook(difficultyScale[difficulty].pages)
+    notebook.isOpen = false
     --photo = Photo(65, 65, "grid")
 
     camera = Camera("fit", 1920, 1080)
@@ -13,7 +19,8 @@ function g.load()
 
     phase = "drawing"
 
-    gallery = Gallery(3)
+    gallery = Gallery(difficultyScale[difficulty].photos)
+    love.mouse.setVisible(true)
 
     --photo:render(1)
 end
@@ -80,6 +87,10 @@ function g.draw()
     gallery:draw()
 
     notebook:draw()
+
+    if gallery.visualPhoto < 1 and phase == "drawing" then
+        love.graphics.draw(lastFrameCanvas, -gallery.visualPhoto * 1920, 0)
+    end
 end
 
 return g

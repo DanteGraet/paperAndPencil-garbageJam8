@@ -1,4 +1,4 @@
-local nextGameState = "test"
+local nextGameState = "titleScreen"
 
 local textList = {
     string.upper("Jaraph"),

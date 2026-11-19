@@ -15,6 +15,11 @@ function gamestateManager.getGamestate()
     return gamestate._name
 end
 
+function gamestateManager.get()
+    return gamestate
+end
+
+
 
 local function createEventFunctions()
     for key, value in pairs(gamestate) do
