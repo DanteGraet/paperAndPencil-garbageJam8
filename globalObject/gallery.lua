@@ -222,12 +222,12 @@ function Gallery:update(dt)
     if phase == "drawing" then
         self.timeRemaining = self.timeRemaining - dt
 
-        if self.timeRemaining < 6 and dodgeFlipFlop == false then
+        if self.timeRemaining < 10 and dodgeFlipFlop == false then
             audioManager.setTargets({
                 always =    0.5,
                 draw =      1,
                 guess =     0,
-                piano =     0,
+                piano =     1,
                 stress =    1,
             })
             dodgeFlipFlop = true

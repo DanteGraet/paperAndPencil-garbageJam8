@@ -18,6 +18,12 @@ end
 
 local text = {}
 
+local function toggleSettings(setting)
+    settings[setting] = (settings[setting] + 1) % 5
+
+    textList[(setting == "music" and 7) or 8].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
+end
+
 
 function text.generateTextList()
     textList = {
@@ -47,12 +53,12 @@ function text.generateTextList()
         },
 
         {
-            x = 32, y = 1080 - 32 - 64, size = 64, interact = true, speed = 0.01,
-            text = "--O-- Music"
+            x = 32, y = 1080 - 32 - 64, size = 64, interact = toggleSettings, speed = 0.01, data = "music",
+            text = string.rep("-", settings.music) .. "O" .. string.rep("-", 4 - settings.music) .. " Music"        -- If this moves, chnage the hard coded stuff
         },
         {
-            x = 32, y = 1080 - 32 - 128, size = 64, interact = true, speed = 0.01,
-            text = "--O-- SFX"
+            x = 32, y = 1080 - 32 - 128, size = 64, interact = toggleSettings, speed = 0.01, data = "SFX",
+            text = string.rep("-", settings.SFX) .. "O" .. string.rep("-", 4 - settings.SFX) .. " SFX"        -- If this moves, chnage the hard coded stuff
         },
 
 

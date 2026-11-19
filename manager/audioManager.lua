@@ -17,10 +17,7 @@ function audioManager.playSound(sound, catagory, pitchChange)
     tempSound:setPitch(1 + math.random(-pitch*100, pitch*100)/100)
 
     -- modify volume
-    local subVolume = 1
-    if catagory and settings.audio[catagory] then
-        subVolume = settings.audio[catagory].value
-    end
+    local subVolume = settings.SFX/2
     local volume = subVolume
     tempSound:setVolume(volume)
 
@@ -41,11 +38,8 @@ function audioManager.newLoopingSound(name, sound, catagory, volume)
     end
 
     -- modify volume
-    local subVolume = volume or 1
-    if catagory and settings.audio[catagory] then
-        subVolume = subVolume * settings.audio[catagory].value
-        loopingSounds[name].catagory = catagory
-    end
+    local subVolume = (volume or 1) * settings.SFX/2
+
     local volume = subVolume
     loopingSounds[name].volume = volume
 
@@ -63,10 +57,8 @@ function audioManager.modifyLoopingSound(name, data)
         loopingSounds[name][key] = value
 
         if key == "volume" or key == "catagory" then
-            local subVolume = value or 1
-            if loopingSounds[name].catagory and settings.audio[loopingSounds[name].catagory] then
-                subVolume = subVolume*settings.audio[loopingSounds[name].catagory].value
-            end
+            local subVolume = (value or 1) * settings.SFX/2
+
             local volume = subVolume
             loopingSounds[name].volume = volume
             loopingSounds[name].sound:setVolume(volume)
@@ -153,18 +145,17 @@ function audioManager.manageBackground(dt)
     if musicTracks[masterTrack] then
 
         if not musicTracks[masterTrack]:isPlaying() then
-            print("restart Tracjk")
             for key, value in pairs(musicTracks) do
                 musicTracks[key]:play()
             end
         end
 
         for key, value in pairs(musicTracks) do
-            local target = musicTargets[key] * 0.5
+            local target = musicTargets[key] * 0.5 * settings.music/4
             local current = musicTracks[key]:getVolume()
             local diff = target - current
             
-            musicTracks[key]:setVolume(quindoc.clamp(current + quindoc.sign(diff) * dt * crossFadeSpeed, 0.00001,1))
+            musicTracks[key]:setVolume(quindoc.clamp(current + quindoc.sign(diff) * dt * crossFadeSpeed, 0.001,1))
         end
     end
 end

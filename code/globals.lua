@@ -18,6 +18,22 @@ if love.filesystem.getDirectoryItems("hiscore.jt") then    -- yes it's just a lu
     highscores = love.filesystem.read("hiscore.jt") or "-------"
 end
 
+
+settings = {
+    SFX = 2,
+    music = 2
+}
+
+if love.filesystem.getDirectoryItems("settings.jt") then
+    local s = love.filesystem.read("settings.jt")
+    
+    if s then
+        settings.SFX = s:sub(1, 1) or 2
+        settings.music = s:sub(2, 2) or 2
+    end
+end
+
+-- looad other globals
 tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
 
 audio = {
@@ -35,4 +51,5 @@ addEvent("update", audioManager.manageBackground, 1)
 
 function love.quit()
     love.filesystem.write("hiscore.jt", highscores)
+    love.filesystem.write("settings.jt", settings.SFX .. settings.music)
 end
