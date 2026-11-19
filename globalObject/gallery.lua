@@ -31,6 +31,10 @@ function Gallery:new(size)
         local picture = Photo(65 + 1920*(i-1), 65, pictureTypes[n])
 
         table.insert(obj.pictures, picture)
+
+        if #pictureTypes > 1 then
+            table.remove(pictureTypes, i)
+        end
         -- remove the picture type later TODO
     end
 
