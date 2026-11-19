@@ -6,8 +6,8 @@ local variants = {
 }
 
 local images = {
-    love.graphics.newImage("object/window/" .. "frame" .. "1.png"),
-    love.graphics.newImage("object/window/" .. "frame" .. "2.png")
+    frame = {love.graphics.newImage("object/window/" .. "frame" .. "1.png"),
+    love.graphics.newImage("object/window/" .. "frame" .. "2.png")}
 }
 for i = 1, #variants do
     images[variants[i]] = {
