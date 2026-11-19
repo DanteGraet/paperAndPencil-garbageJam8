@@ -97,7 +97,7 @@ function Photo:getScore()
     end
 
     if #self.finds == 0 then
-        return 0.4999, totalModifications   -- 0.4999 is techiccally only just a fail so you will get an F if you do nothin' 
+        return 0.000001, totalModifications   -- 000001 cause yea
     end
 
     -- Actually math

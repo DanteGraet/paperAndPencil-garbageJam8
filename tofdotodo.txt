@@ -9,7 +9,7 @@ level ideas:
         - trees
         - birds
         - animals
-    ✅ grid of symbols/objects
+✅    grid of symbols/objects
     inside a building
     ship with greebleing
     map
@@ -29,13 +29,13 @@ level ideas:
     ocean
     cuircut diagram
     cityscape
-    ✅stuff on a wall
+✅    stuff on a wall
 
     box o chocklate
     terrarium (antfarm)
 
-eahc need:
-    Time limit (viewing)
+✅eahc need:
+✅    Time limit (viewing)
 
 
 Title screen
@@ -45,26 +45,19 @@ Settings?
     Hold to see, hold to hide, toggle
 Creduts (Not chap7E)
 
-highscore or someting
+✅highscore or someting
 
 
 Spot the difference
     ✅Make objects spawn (save)
     ✅make changes    (and save/mark them)
-    identify the changes
+    ✅identify the changes
     Add in Next Button
-    Add in Score
+    ✅Add in Score
 
 Paper & pencil
     ✅Open/close canvas
     ✅Draw on canvas (ig points and md for line)
-
-
-
-Score
-(#objects - modsMade + ModsFound - Fails) / #objects 
-
-
 
 
 
