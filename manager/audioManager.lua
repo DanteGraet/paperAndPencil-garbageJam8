@@ -160,7 +160,7 @@ function audioManager.manageBackground(dt)
         end
 
         for key, value in pairs(musicTracks) do
-            local target = musicTargets[key] -- * MUSIC VOLUME
+            local target = musicTargets[key] * 0.5
             local current = musicTracks[key]:getVolume()
             local diff = target - current
             
