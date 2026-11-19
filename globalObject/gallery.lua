@@ -161,7 +161,7 @@ function Gallery:nextPhoto()
         end
 
 
-        local percent = math.floor(total/3 * 100)
+        local percent = math.floor(total/#self.pictures * 100)
         local current = highscores:sub(self.difficulty, self.difficulty)
         local override = true
 
@@ -170,7 +170,7 @@ function Gallery:nextPhoto()
                 break
             end
 
-            if total/3 >= grades[i][2] then
+            if total/#self.pictures >= grades[i][2] then
                 -- we have not yet found a grade this good, set it as the highscore
                 highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
                 break
@@ -218,6 +218,7 @@ function Gallery:update(dt)
 end
 
 
+-- Holey Spaghetti Imma forghetti how this works
 function Gallery:draw()
     local clockToDraw = math.floor((timer*5) % 2) + 1
 
@@ -313,10 +314,10 @@ function Gallery:displayScore(ox)
     local gradeX = 65
     local gradeY = 65 + (125+35) * (5)
     local grade = "-"
-    local percent = math.floor(total/3 * 100)
+    local percent = math.floor(total/#self.pictures * 100)
 
     for i = 1,#grades do
-        if total/3 > grades[i][2] then
+        if total/#self.pictures > grades[i][2] then
             grade = grades[i][1]
             break
         end
