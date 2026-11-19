@@ -33,7 +33,9 @@ function g.keypressed(key)
 end
 
 function g.mousepressed(x, y, button)
-    tut.nextLine()
+    if not notebook.isOpen then
+        tut.nextLine()
+    end
 
     if button == 1 then
         notebook:startDraw(x, y, false)

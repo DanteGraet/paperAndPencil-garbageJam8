@@ -1,6 +1,10 @@
 -- hey it's the paper (& pencil from the theme)
 -- Prehapse do velocity stuff to make erase larger (QOL)
 
+local function sigmoid(x)
+    return 1 / ( 1 + math.pow(2.7, -x))
+end
+
 Paper = {}
 Paper.__index = Paper
 
@@ -46,6 +50,7 @@ function Paper:new(x, y, width, height)
     obj.isDrawing = false
     obj.erase = false
     obj.lastPoint = {0, 0}      -- x, y position
+    obj.vStore = {}
 
 
     setmetatable(obj, {
@@ -80,6 +85,14 @@ function Paper:startDraw(mx, my, erase)
     self.erase = erase  -- true or false, for black or white colour
     self.lastPoint = {mx - self.x, my - self.y}
     self.isDrawing = true
+
+    if erase then
+        audioManager.newLoopingSound("draw", audio.erase, catagory, 1)
+    else
+        audioManager.newLoopingSound("draw", audio.draw, catagory, 1)
+    end
+
+    self.vStore = {}
 end
 
 function Paper:endDraw(erase)
@@ -88,6 +101,8 @@ function Paper:endDraw(erase)
     else
         self.isDrawing = false
     end
+
+    audioManager.removeLoopingSound("draw")
 end
 
 
@@ -105,9 +120,27 @@ function Paper:update(dt)
         love.graphics.line(self.lastPoint[1], self.lastPoint[2], mx - self.x, my - self.y)
         love.graphics.circle("fill", self.lastPoint[1], self.lastPoint[2], editWidth/2)
         love.graphics.circle("fill", mx - self.x, my - self.y, editWidth/2)
+
+        local vx = (mx - self.x - self.lastPoint[1])
+        local vy = (my - self.y - self.lastPoint[2])
+        local v = math.max(math.sqrt(vx * vx + vy * vy) / dt, (self.lastPoint[3] or 0) *dt)
+
+        table.insert(self.vStore, v)
+        if #self.vStore > 5 then
+            table.remove(self.vStore, 1)
+        end
+
+        local vol = 0
+        for i = 1,#self.vStore do
+            vol = vol + self.vStore[i]
+        end
+        vol = vol / #self.vStore
+
+        audioManager.modifyLoopingSound("draw", {volume = math.min(vol / 1000, 1), pitch = math.max((sigmoid(vol/10000)) * 6 - 3, 1)})
+
         self.lastPoint = {
             mx - self.x,
-            my - self.y
+            my - self.y,
         }
 
         love.graphics.setCanvas()

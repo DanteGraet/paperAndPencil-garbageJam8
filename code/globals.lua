@@ -20,7 +20,11 @@ end
 
 tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
 
+audio = {
+    draw = love.audio.newSource("assets/audio/draw.ogg", "static"),
+    erase = love.audio.newSource("assets/audio/erase.ogg", "static"),
+}
+
 function love.quit()
-    
     love.filesystem.write("hiscore.jt", highscores)
 end
