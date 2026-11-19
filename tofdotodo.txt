@@ -29,7 +29,7 @@ level ideas:
     ocean
     cuircut diagram
     cityscape
-    stuff on a wall
+    ✅stuff on a wall
 
     box o chocklate
     terrarium (antfarm)

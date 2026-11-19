@@ -5,6 +5,11 @@ local function sign(x)
     return (x > 0 and 1) or (x < 0 and -1) or 0
 end
 
+local pencilImage = {
+    love.graphics.newImage("assets/ui/pencil1.png"),
+    love.graphics.newImage("assets/ui/pencil2.png")
+}
+
 
 Notebook = {}
 Notebook.__index = Notebook
@@ -52,6 +57,8 @@ function Notebook:setOpen(isOpen)
     else
         self:updatePageVisibility(false)
     end
+
+    love.mouse.setVisible(not self.isOpen)
 end
 
 function Notebook:updatePageVisibility(isVisible)
@@ -112,6 +119,21 @@ function Notebook:draw()
     for i = 1,#self.pages do
         local page = self.pages[i]
         page:draw()
+    end
+
+    local frame =  math.floor((timer*5) % 2) + 1
+    local mx, my = camera:translatePosition(love.mouse.getPosition())
+    if self.isOpen then
+        love.graphics.setColor(1,1,1)
+        if self.pages[self.currentPage].isDrawing == true then
+            if self.pages[self.currentPage].erase == true then
+                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 5, -1, -1)
+            else
+                love.graphics.draw(pencilImage[frame], mx, my, (frame-1.5) / 5, 1, 1, 50, 51)
+            end
+        else
+            love.graphics.draw(pencilImage[frame], mx - 50, my - 51)
+        end
     end
 --    self.pages[self.currentPage]:draw()
 end
