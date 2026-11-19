@@ -4,7 +4,6 @@ local g = {}
 
 local notebook = {}
 -- tut is persistant caus why not
-local tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
 
 function g.load()
     notebook = Notebook(3)
@@ -14,6 +13,7 @@ function g.load()
     timer = 0
 
     love.mouse.setVisible(true)
+
 end
 
 function g.resize()

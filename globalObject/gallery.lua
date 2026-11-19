@@ -1,6 +1,20 @@
 Gallery = {}
 Gallery.__index = Gallery
 
+local frameImages = {
+    love.graphics.newImage("assets/ui/frame1.png"),
+    love.graphics.newImage("assets/ui/frame2.png")
+}
+
+local grades = {
+    {"S", 1},
+    {"A", 0.85},
+    {"B", 0.7},
+    {"C", 0.6},
+    {"D", 0.5},
+    {"F", 0},
+}
+
 local clockImages = {
     clock = {
         love.graphics.newImage("assets/ui/clock1.png"),
@@ -13,13 +27,13 @@ local clockImages = {
 }
 
 setmetatable(Gallery, {
-    __call = function(self, size)
-        return self:new(size)
+    __call = function(self, size, timeScale, difficulty)
+        return self:new(size, timeScale, difficulty)
     end
 })
 
 
-function Gallery:new(size, timeScale)
+function Gallery:new(size, timeScale, difficulty)
     math.randomseed(os.time(), love.timer.getTime())
 
     local obj = {}
@@ -43,6 +57,7 @@ function Gallery:new(size, timeScale)
     obj.visualPhotoSine = 0
 
     obj.timeScale = timeScale or 1
+    obj.difficulty = difficulty
 
     setmetatable(obj, {
         __index = Gallery,
@@ -52,6 +67,25 @@ function Gallery:new(size, timeScale)
     obj.lastTimeRemaining = 0
     
     obj:render()
+    
+
+    --[[
+        1400 x  950
+        140     95          - / 10
+        560     380         - * 4
+        1120                - * 2
+        1170                - + 50  (spacing)
+        1210                - + 40 (boarderr o 15)
+
+        
+    ]]
+    -- local height = (380 + 50) * #obj.pictures - 50 + 40
+    -- obj.resultsY = (1080-850)/2
+    -- obj.resultsX = (1080-850)/2
+    -- obj.resultsCanvas = {
+    --     love.graphics.newCanvas(1210, height),
+    --     love.graphics.newCanvas(1210, height)
+    -- }
 
     phase = "drawing"
 
@@ -68,10 +102,32 @@ function Gallery:render(pictureNo)
 end
 
 function Gallery:nextPhoto()
-    self.currentPhoto = self.currentPhoto + 1
+    -- if self.pictures[self.currentPhoto] then
+    --     local photo = self.pictures[self.currentPhoto]
+    --     local spacing = 50
+    --     local totalPhotoWidth = (280 + spacing) * #self.pictures - spacing
 
-    
+    --     local x = 20 + ((phase == "spotting" and 1400 * 4/10 + 50) or 0)
+    --     local y = 20 + (380 + 50) * (self.currentPhoto - 1)
+
+    --     love.graphics.origin()
+    --     love.graphics.setCanvas(self.resultsCanvas[1])
+    --     love.graphics.draw(photo.canvases[1], x, y, 0, 4/10, 4/10)
+
+    --     love.graphics.setColor(photo.frameColour)
+    --     love.graphics.draw(frameImages[1], x - 50*4/10, y - 50*4/10, 0, 4/10, 4/10)
+
+    --     love.graphics.setCanvas(self.resultsCanvas[2])
+    --     love.graphics.draw(photo.canvases[2], x, y, 0, 4/10, 4/10)
+    --     love.graphics.setColor(photo.frameColour)
+    --     love.graphics.draw(frameImages[1], x - 50*4/10, y - 50*4/10, 0, 4/10, 4/10)
+
+    --     love.graphics.setCanvas()
+    -- end
+
+    self.currentPhoto = self.currentPhoto + 1
     self:render()
+
 
     if self.currentPhoto > #self.pictures + 1 and phase ~= "spotting" then
         phase = "spotting"
@@ -86,8 +142,36 @@ function Gallery:nextPhoto()
             end
         else
             self.lastTimeRemaining = self.timeRemaining
-            self.timeRemaining = self.pictures[self.currentPhoto].level.time * self.timeScale
+            self.timeRemaining = (self.pictures[self.currentPhoto].level.time or 60) * self.timeScale
         end
+
+    elseif phase == "spotting" then
+        -- Save to highscore
+        local total = 0
+        for i = 1,#self.pictures do
+            local photo = self.pictures[i]
+            local score, miss, totalMods = photo:getScore()
+            total = total + score
+        end
+
+
+        local percent = math.floor(total/3 * 100)
+        local current = highscores:sub(self.difficulty, self.difficulty)
+        local override = true
+
+        for i = 1,#grades do
+            if grades[i][1] == current then
+                break
+            end
+
+            if total/3 >= grades[i][2] then
+                -- we have not yet found a grade this good, set it as the highscore
+                highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
+                break
+            end
+        end
+
+        tut.generateTextList()
     end
 end
 
@@ -165,8 +249,68 @@ function Gallery:draw()
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
 
-                photo:drawFinds()
+                photo:drawFinds(2, photo.x + 1500, photo.y)
+            end
+        else
+            if i == #self.pictures + 1 and i == math.ceil(self.visualPhoto) and  phase == "spotting" then
+                local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
+                self:displayScore(1920 * sine)
+
+            elseif i == #self.pictures + 2 and phase == "spotting" then
+                local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
+                love.graphics.translate(1920 * sine, 0)
+
+
+                self:displayScore(-1920)
+                tut.draw(false)
+
+                if sine == 0 then
+                    gamestateManager.setGamestate("titleScreen")
+                end
+                love.graphics.translate(-1920 * sine, 0)
+
             end
         end
     end
+end
+
+function Gallery:displayScore(ox)
+    local total = 0
+
+    for i = 1,#self.pictures do
+        love.graphics.setColor(1, 1, 1)
+
+        local photo = self.pictures[i]
+        local y = photo.y + (125+35) * (i-1)
+        local x = (65)
+        local maX = #photo.finds * (125+35) + 65
+
+        photo:drawFinds(15, x + ox, y)
+
+        love.graphics.setColor(0, 0, 0)
+
+        fontManager.set("handwriting", 125)
+        local score, miss, totalMods = photo:getScore()
+        love.graphics.print(math.floor(score *100) .. "%", maX + ox, y)
+
+        fontManager.set("handwriting", 50)
+        love.graphics.print((miss or totalMods) .. " missed!", maX + ox, y + 90)
+
+        total = total + score
+    end
+
+    local gradeX = 65
+    local gradeY = 65 + (125+35) * (5)
+    local grade = "-"
+    local percent = math.floor(total/3 * 100)
+
+    for i = 1,#grades do
+        if total/3 > grades[i][2] then
+            grade = grades[i][1]
+            break
+        end
+    end
+
+    fontManager.set("handwriting", 150)
+    love.graphics.print("Total " .. percent .. "% (" .. grade .. ")", gradeX + ox, gradeY)
 end

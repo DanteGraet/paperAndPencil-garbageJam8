@@ -16,7 +16,10 @@ local function start(difficulty)
     gamestateManager.setGamestate("test", difficulty, canvas)
 end
 
-local function generateTextList()
+local text = {}
+
+
+function text.generateTextList()
     textList = {
         {
             x = 32, y = 32, size = 128, interact = false, speed = 0.05,
@@ -55,19 +58,27 @@ local function generateTextList()
 
     }
 
-    local displayCount = math.min(math.max(#highscores + 10, 3), #difficultyScale)
+    local highScoreCount = 0
+    for i = 1, #highscores do
+        local score = highscores:sub(i, i)
+        if score ~= "-" and score ~= "F" then
+            highScoreCount = highScoreCount + 1
+        end
+    end
+
+    local displayCount = math.min(highScoreCount + 3, #difficultyScale)
 
     table.insert(textList,
         {
             x = 1530, y = 1080 - 32 - 64 * (displayCount+1), size = 64, interact = false, speed = 0.03,
-            text = "Play:"
+            text = "Play"
         }
     )
 
     for i = 1, displayCount do
         local suff = ""
-        if highscores[i] then
-            suff = " (" ..  highscores[i] .. ")"
+        if highscores:sub(i, i) ~= "-" then
+            suff = " (" ..  highscores:sub(i, i) .. ")"
         end
         table.insert(textList,
         {
@@ -80,7 +91,7 @@ local function generateTextList()
     for i = 1,#textList do
         local t = textList[i]
         if t.interact then
-            local font = fontManager.get("quindocha", t.size)
+            local font = fontManager.get("handwriting", t.size)
             local width = font:getWidth(t.text .. "   .")
             local height = font:getHeight(t.text)
 
@@ -89,7 +100,6 @@ local function generateTextList()
     end
 end
 
-local text = {}
 
 function text.update(dt, isNotebookOpen)
     if not textList[linesToDraw] then
@@ -111,10 +121,12 @@ function text.update(dt, isNotebookOpen)
     end
 end
 
+
 function text.nextLine()
     linesToDraw = linesToDraw + 1
     charToDraw = 0
 end
+
 
 function text.click()
     local mx, my = camera:translatePosition(love.mouse.getPosition())
@@ -128,6 +140,7 @@ function text.click()
         end
     end
 end
+
 
 function text.draw(isNotebookOpen)
     local mx, my = camera:translatePosition(love.mouse.getPosition())
@@ -148,13 +161,13 @@ function text.draw(isNotebookOpen)
                 text = text:sub(0, charToDraw)
             end
 
-            fontManager.set("quindocha", t.size)
+            fontManager.set("handwriting", t.size)
             love.graphics.print(pref .. text, t.x, t.y)
         end
     end
 end
 
 
-generateTextList()
+text.generateTextList()
 
 return text

@@ -1,3 +1,5 @@
+fontManager.loadFont("assets/Handwriting1-Regular.ttf", "handwriting")
+
 difficultyScale = {
     {name = "Easy"        , photos = 2, pages = 2, timeMult = 1.5},
     {name = "Normal"      , photos = 3, pages = 3, timeMult = 1},
@@ -9,4 +11,16 @@ difficultyScale = {
 }
 
 -- load highscores & settings
-highscores = {}
+highscores = "-------"
+
+local i = 1
+if love.filesystem.getDirectoryItems("hiscore.jt") then    -- yes it's just a lua file 
+    highscores = love.filesystem.read("hiscore.jt") or "-------"
+end
+
+tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
+
+function love.quit()
+    
+    love.filesystem.write("hiscore.jt", highscores)
+end

@@ -24,7 +24,7 @@ function ElipticalCollider:new(x, y, rx, ry)
     return obj
 end
 
-function ElipticalCollider:checkCollision(x, y, debug)
+function ElipticalCollider:checkCollision(x, y)
     local collision = false
     local distance = math.huge
 
@@ -32,16 +32,10 @@ function ElipticalCollider:checkCollision(x, y, debug)
     local dx = x - self.x
     local dy = y - self.y
 
-    if debug then
-        print((dx*dx)/(self.rx*self.rx) + (dy*dy)/(self.ry*self.ry))
-    end
     if (dx*dx)/(self.rx*self.rx) + (dy*dy)/(self.ry*self.ry) < 1 then
         -- check if it is closer (dont need sqrt here)
         distance = math.sqrt(dx*dx + dy*dy)
         collision = true
-        if debug then
-            print(collision)
-        end
     end
     
     return collision, distance 

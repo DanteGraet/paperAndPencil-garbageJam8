@@ -19,7 +19,7 @@ function g.load(diff, lf)
 
     phase = "drawing"
 
-    gallery = Gallery(difficultyScale[difficulty].photos)
+    gallery = Gallery(difficultyScale[difficulty].photos, difficultyScale[difficulty].timeMult, difficulty)
     love.mouse.setVisible(true)
 
     --photo:render(1)
@@ -89,7 +89,9 @@ function g.draw()
     notebook:draw()
 
     if gallery.visualPhoto < 1 and phase == "drawing" then
-        love.graphics.draw(lastFrameCanvas, -gallery.visualPhotoSine * 1920, 0)
+        if lastFrameCanvas then
+            love.graphics.draw(lastFrameCanvas, -gallery.visualPhotoSine * 1920, 0)
+        end
     end
 end
 

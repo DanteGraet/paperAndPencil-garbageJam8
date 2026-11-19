@@ -30,14 +30,7 @@ local findImages = {
     },
 }
 
-local grades = {
-    {"S", 1},
-    {"A", 0.85},
-    {"B", 0.7},
-    {"C", 0.6},
-    {"D", 0.5},
-    {"F", 0},
-}
+
 
 local frameColours = {
     {1, 1, 1},
@@ -100,18 +93,20 @@ function Photo:new(x, y, level)
 end
 
 function Photo:getScore()
-    if #self.finds == 0 then
-        return 0
-    end
-
-    -- Actually math
-    local count = #self.objects
     local totalModifications = 0
     for i = 1,#self.objects do
         if self.objects[i].hasMutated == true then
             totalModifications = totalModifications + 1
         end
     end
+
+    if #self.finds == 0 then
+        return 0.4999, totalModifications   -- 0.4999 is techiccally only just a fail so you will get an F if you do nothin' 
+    end
+
+    -- Actually math
+    local count = #self.objects
+
 
     local foundModifications = 0
     local incorectIdentifications = 0
@@ -132,10 +127,11 @@ function Photo:getScore()
     local foundPortion = foundModifications / totalModifications
     local wrongPortion = incorectIdentifications / (count - totalModifications)
 
+    -- so this does mean its better to guess once when you got no idea but idk how to fix that
     local score = (foundPortion / 2 + 0.5) * (1 - wrongPortion)
 
 
-    return score
+    return score, (totalModifications - foundModifications), totalModifications
 end
 
 
@@ -277,7 +273,7 @@ function Photo:draw()
     self:drawDebug()
 end
 
-function Photo:drawFinds()
+function Photo:drawFinds(col, ox, oy)
     local canvasToDraw = math.floor(((timer*5) + self.findImage) % 2) + 1
 
     love.graphics.draw(nextImages[canvasToDraw], self.x + 1500 -10, self.y + 5*(125+35) + 10)
@@ -287,13 +283,13 @@ function Photo:drawFinds()
     if #self.finds == 0 then return end
 
     for i = 1, #self.finds do
-        local x = self.x + 1500 + (125+35)*((i-1) % 2)
-        local y = self.y + math.floor((i-1)/2)*(125+35) + 10
+        local x = ox + (125+35)*((i-1) % col)
+        local y = oy + math.floor((i-1)/col)*(125+35) + 10
 
         local object = self.objects[self.finds[i][1]]
         local image = (object.images and object.images[canvasToDraw]) or nil
-
-        local scale = math.min(125/image:getWidth(), 125/image:getHeight())
+        
+        local scale = (image and math.min(125/image:getWidth(), 125/image:getHeight())) or 0
 
         if self.finds[i][2] == "correct" then
 
@@ -312,9 +308,10 @@ function Photo:drawFinds()
 
         if findImages[self.finds[i][2]] then
             love.graphics.draw(findImages[self.finds[i][2]][canvasToDraw], x - 10, y - 10)
-
         end
     end
+
+
 
     -- Draw the next button also shhhh
 
