@@ -10,7 +10,7 @@ function g.load()
     notebook.isOpen = false
 
     camera = Camera("fit", 1920, 1080)
-    timer = 0
+    timer = 10
 
     love.mouse.setVisible(true)
 
@@ -21,7 +21,6 @@ function g.load()
         piano =     0.75,
         stress =    0,
     })
-
 end
 
 function g.resize()
@@ -32,6 +31,35 @@ function g.update(dt)
     tut.update(dt, notebook.isOpen)
     notebook:update(dt)
     timer = timer + dt
+
+    if timer > 30 then
+        timer = math.random(5, 20)
+
+        local tracks = {
+            always =    1,
+            draw =      0,
+            guess =     0,
+            piano =     0,
+            stress =    0,
+        }
+
+        local enum = {"always", "draw", "guess", "piano", "stress"}
+
+        local force
+        for i = 1, math.random(0, 2) do
+            local c = math.random(1, #enum)
+
+            tracks[enum[c]] = force or (math.random(1, 4) / 4)
+
+            if enum[c] == "always" then
+                force = 1
+            end
+
+            table.remove(enum, c)
+        end
+
+        audioManager.setTargets(tracks)
+    end
 end
 
 function g.keypressed(key)

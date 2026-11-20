@@ -11,6 +11,19 @@ local nextImages = {
     love.graphics.newImage("assets/ui/next2.png")
 }
 
+local splash = {
+    "Hope you're notes are good",
+    "Take your time",
+    "10 guesses max",
+    "3-5 changes I think",
+    'love.graphics.printf(self.splash, x, 610, 1920, "center")',
+    "forghetti spaghetti",
+    "last minute notes?",
+    "Did you get that",
+    "Geez another text",
+    "Could be doin' anything else",
+}
+
 
 local grades = {
     {"S", 0.99},
@@ -64,6 +77,8 @@ function Gallery:new(size, timeScale, difficulty)
 
     obj.timeScale = timeScale or 1
     obj.difficulty = difficulty
+
+    obj.splash = splash[math.random(1, #splash)]
 
     obj.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
 
@@ -209,7 +224,7 @@ function Gallery:nextPhoto()
 
     else
         self.lastTimeRemaining = self.timeRemaining
-        self.timeRemaining = (math.huge) * self.timeScale
+        self.timeRemaining = 3 * self.timeScale
     end
 end
 
@@ -325,15 +340,16 @@ function Gallery:draw()
                 love.graphics.draw(img, photo.x + 1500 -10 + img:getWidth()/2, photo.y + 5*(125+35) + 10 + img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
             end
         else
+            local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
             if i == #self.pictures + 1 and i == math.ceil(self.visualPhoto) and  phase == "spotting" then
-                local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
+                
                 self:displayScore(1920 * sine)
                 love.graphics.setColor(1, 1, 1)
                 local img = nextImages[clockToDraw]
                 love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 + 1920 * sine+ img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
 
             elseif i == #self.pictures + 2 and phase == "spotting" then
-                local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
+                
                 love.graphics.translate(1920 * sine, 0)
 
                 local img = nextImages[clockToDraw]
@@ -348,6 +364,20 @@ function Gallery:draw()
 
             else
                 --love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10, 65 + 5*(125+35) + 10)
+            end
+
+            if (phase == "drawing" and i > 0) or (phase == "spotting" and i == 0) then
+                fontManager.set("handwriting", 128)
+                love.graphics.setColor(0, 0, 0)
+
+                local x = sine * 1920
+                if phase == "spotting" then
+                    x = - (1-sine)*1920
+                end
+
+                love.graphics.printf("Spot the difference", x, 500, 1920, "center")
+                fontManager.set("handwriting", 48)
+                love.graphics.printf(self.splash, x, 610, 1920, "center")
             end
         end
     end
