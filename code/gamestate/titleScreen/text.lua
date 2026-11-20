@@ -51,8 +51,8 @@ function text.generateTextList()
         --     text = "(LMB) erase"
         -- },
         {
-            x = 32, y = --[[32+128*3]] 32+128, size = 64, interact = false, speed = 0.03,
-            text = "Draw what you see"
+            x = 32, y = --[[32+128*3]] 32+128, size = 64, interact = false, speed = 0.02,
+            text = "Draw the image then spot the difference"
         },
 
         {

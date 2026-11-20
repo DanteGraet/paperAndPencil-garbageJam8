@@ -56,13 +56,10 @@ end
 
 function PhotoFrame:permutate()
     local varIdx = math.random(1, #variants)
-    local newVariant = variants[varIdx]
+    local newVariant = (self.variant == "s" and "r") or "s"
 
     if newVariant == self.variant then
-        varIdx = varIdx - 1
-        if varIdx == 0 then varIdx = #variants-1 end -- um no jaraph from varswappin or somethin
-
-        newVariant = variants[varIdx]
+        crash()
     end
 
     self.variant = newVariant

@@ -355,6 +355,14 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
         love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
 
         if image then
+            if object.colour then
+                if self.finds[i][2] == "correct" then
+                    love.graphics.setColor(object.colour)
+                else
+                    local c = object.colour
+                    love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+                end
+            end
             love.graphics.draw(image, x, y, 0, scale, scale)
         end
 
@@ -408,7 +416,10 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
             love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
 
             if image then
-
+                if object.colour then
+                    local c = object.colour
+                    love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+                end
                 love.graphics.draw(image, x, y, 0, scale, scale)
             end
             love.graphics.setColor(1, 1, 1)
