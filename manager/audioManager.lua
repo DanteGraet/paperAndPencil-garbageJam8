@@ -111,7 +111,7 @@ end
 
 
 function audioManager.addBackgroundTrack(path, name, target)
-    musicTracks[name] = love.audio.newSource(path, "stream")
+    musicTracks[name] = love.audio.newSource(path, "static")
     musicTracks[name]:setVolume(0.0001)
     musicTargets[name] = target or 1
 
