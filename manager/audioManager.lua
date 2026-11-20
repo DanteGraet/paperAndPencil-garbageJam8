@@ -5,6 +5,10 @@ audioManager = {}
 function audioManager.playSound(sound, pitchChange)
     local tempSound
 
+    if settings.SFX == 0 then
+        return
+    end
+
     --create the sound from either a table (pick random) or sound
     if type(sound) == "table" then
         tempSound = sound[math.random(1,#sound)]:clone()
@@ -21,7 +25,6 @@ function audioManager.playSound(sound, pitchChange)
     local volume = subVolume
     tempSound:setVolume(volume)
 
-    
     tempSound:play()
 end
 
@@ -143,19 +146,27 @@ end
 
 function audioManager.manageBackground(dt)
     if musicTracks[masterTrack] then
-
-        if not musicTracks[masterTrack]:isPlaying() then
-            for key, value in pairs(musicTracks) do
-                musicTracks[key]:play()
+        if settings.music == 0 then
+            if musicTracks[masterTrack]:isPlaying() then
+                for key, value in pairs(musicTracks) do
+                    musicTracks[key]:stop()
+                end
             end
-        end
+        else
 
-        for key, value in pairs(musicTracks) do
-            local target = musicTargets[key] * 0.5 * settings.music/4
-            local current = musicTracks[key]:getVolume()
-            local diff = target - current
-            
-            musicTracks[key]:setVolume(quindoc.clamp(current + quindoc.sign(diff) * dt * crossFadeSpeed, 0.001,1))
+            if not musicTracks[masterTrack]:isPlaying() then
+                for key, value in pairs(musicTracks) do
+                    musicTracks[key]:play()
+                end
+            end
+
+            for key, value in pairs(musicTracks) do
+                local target = musicTargets[key] * 0.5 * settings.music/4
+                local current = musicTracks[key]:getVolume()
+                local diff = target - current
+                
+                musicTracks[key]:setVolume(quindoc.clamp(current + quindoc.sign(diff) * dt * crossFadeSpeed, 0.001,1))
+            end
         end
     end
 end

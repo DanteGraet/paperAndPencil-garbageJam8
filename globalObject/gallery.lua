@@ -66,8 +66,11 @@ function Gallery:new(size, timeScale, difficulty)
 
         table.insert(obj.pictures, picture)
 
-        if #pictureTypes > 1 then
-            table.remove(pictureTypes, n)
+        table.remove(pictureTypes, n)
+
+        -- reset picture types if required
+        if #pictureTypes == 0 then
+            pictureTypes = love.filesystem.getDirectoryItems("pictures")
         end
         -- remove the picture type later TODO
     end
@@ -321,7 +324,7 @@ function Gallery:draw()
 
                 if time < 5 then
                     local r = math.random() * math.pi * 2
-                    local d = math.random() * (5-time) * 5
+                    local d = math.random() * (5-time) * 3
                     ox = math.cos(r)*d
                     oy = math.sin(r)*d
                 end
