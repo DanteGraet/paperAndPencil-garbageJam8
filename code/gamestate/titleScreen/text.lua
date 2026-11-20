@@ -14,6 +14,8 @@ local function start(difficulty)
     love.graphics.setCanvas()
 
     gamestateManager.setGamestate("test", difficulty, canvas)
+
+    audioManager.playSound(audio.click, 0.2)
 end
 
 local text = {}
@@ -22,6 +24,7 @@ local function toggleSettings(setting)
     settings[setting] = (settings[setting] + 1) % 5
 
     textList[(setting == "music" and 3) or 4].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
+    audioManager.playSound(audio.click, 0.2)
 end
 
 

@@ -162,6 +162,7 @@ function Photo:addToFinds(x, y)
 
     if #self.finds >= 10 then
         -- Play Sound
+        audioManager.playSound(audio.click, 0.2)
         return
     end
 
@@ -170,6 +171,7 @@ function Photo:addToFinds(x, y)
 
     for i = 1, #self.finds do
         if self.finds[i][1] == index then
+            audioManager.playSound(audio.click, 0.2)
             return
         end
     end
@@ -180,6 +182,8 @@ function Photo:addToFinds(x, y)
         if object.hasMutated == true then
             outline = "correct"
         end
+
+        audioManager.playSound(audio[outline], 0.2)
 
         local t = {index, outline}
 

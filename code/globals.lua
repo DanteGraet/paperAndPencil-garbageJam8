@@ -39,6 +39,9 @@ tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
 audio = {
     draw = love.audio.newSource("assets/audio/draw.ogg", "static"),
     erase = love.audio.newSource("assets/audio/erase.ogg", "static"),
+    correct = love.audio.newSource("assets/audio/correct.ogg", "static"),
+    incorrect = love.audio.newSource("assets/audio/wrong.ogg", "static"),
+    click = love.audio.newSource("assets/audio/click.ogg", "static"),
 }
 
 audioManager.addBackgroundTrack("assets/audio/music/always.ogg" ,"always"   ,1)

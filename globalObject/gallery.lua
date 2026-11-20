@@ -235,8 +235,9 @@ function Gallery:mousereleased(x, y)
         end
     end
 
-    if self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
+    if self.currentPhoto == self.visualPhoto and self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
         self:nextPhoto()
+        audioManager.playSound(audio.click, 0.2)
     end
 end
 
@@ -378,6 +379,11 @@ function Gallery:draw()
                 love.graphics.printf("Spot the difference", x, 500, 1920, "center")
                 fontManager.set("handwriting", 48)
                 love.graphics.printf(self.splash, x, 610, 1920, "center")
+
+                love.graphics.setColor(1, 1, 1)
+                local img = nextImages[clockToDraw]
+                love.graphics.draw(nextImages[clockToDraw], x + 65 + 1500 -10 + img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
+
             end
         end
     end

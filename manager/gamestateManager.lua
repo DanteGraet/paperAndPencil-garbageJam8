@@ -1,5 +1,5 @@
 local gamestateFolder = "code/gamestate/"
-local initialGamestate = "splash"
+local initialGamestate = "titleScreen"
 local eventPriority = 0
 
 gamestateManager = {}

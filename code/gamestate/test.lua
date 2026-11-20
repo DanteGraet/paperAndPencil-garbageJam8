@@ -46,8 +46,8 @@ end
 function g.keypressed(key)
     if key == "space" then
         notebook:setOpen()
-    elseif key == "t" then
-        gallery:nextPhoto()
+    -- elseif key == "t" then
+    --     gallery:nextPhoto()
     end
 end
 

@@ -57,7 +57,7 @@ function SkyObject:permutate()
     self.images = images[self.variant]
 
     if math.random(1, 10) == 1 then
-        obj.variant = "blank"
+        self.variant = "blank"
     end
 
     self.hasMutated = true

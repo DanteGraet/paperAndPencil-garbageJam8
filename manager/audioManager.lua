@@ -2,7 +2,7 @@
 
 audioManager = {}
 
-function audioManager.playSound(sound, catagory, pitchChange)
+function audioManager.playSound(sound, pitchChange)
     local tempSound
 
     --create the sound from either a table (pick random) or sound
