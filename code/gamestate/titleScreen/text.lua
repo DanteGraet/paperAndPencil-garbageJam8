@@ -21,7 +21,7 @@ local text = {}
 local function toggleSettings(setting)
     settings[setting] = (settings[setting] + 1) % 5
 
-    textList[(setting == "music" and 7) or 8].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
+    textList[(setting == "music" and 3) or 4].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
 end
 
 
@@ -31,24 +31,24 @@ function text.generateTextList()
             x = 32, y = 32, size = 128, interact = false, speed = 0.05,
             text = "Jot the Difference"
         },
+        -- {
+        --     x = 32, y = 32+128, size = 64, interact = false, speed = 0.03,
+        --     text = "(SPACE) toggle notebook"
+        -- },
+        -- {
+        --     x = 32, y = 32+128*1.5, size = 64, interact = false, speed = 0.01,
+        --     text = "(SCROLL) next page"
+        -- },
+        -- {
+        --     x = 32, y = 32+128*2, size = 64, interact = false, speed = 0.01,
+        --     text = "(RMB) draw"
+        -- },
+        -- {
+        --     x = 32, y = 32+128*2.5, size = 64, interact = false, speed = 0.01,
+        --     text = "(LMB) erase"
+        -- },
         {
-            x = 32, y = 32+128, size = 64, interact = false, speed = 0.03,
-            text = "(SPACE) toggle notebook"
-        },
-        {
-            x = 32, y = 32+128*1.5, size = 64, interact = false, speed = 0.01,
-            text = "(SCROLL) next page"
-        },
-        {
-            x = 32, y = 32+128*2, size = 64, interact = false, speed = 0.01,
-            text = "(RMB) draw"
-        },
-        {
-            x = 32, y = 32+128*2.5, size = 64, interact = false, speed = 0.01,
-            text = "(LMB) erase"
-        },
-        {
-            x = 32, y = 32+128*3, size = 64, interact = false, speed = 0.03,
+            x = 32, y = --[[32+128*3]] 32+128, size = 64, interact = false, speed = 0.03,
             text = "Draw what you see"
         },
 
@@ -101,7 +101,7 @@ function text.generateTextList()
             local width = font:getWidth(t.text .. "   .")
             local height = font:getHeight(t.text)
 
-            t.collider = RectangularCollider:new(t.x, t.y, width, height *0.7)
+            t.collider = RectangularCollider:new(t.x, t.y, width, height *0.9)
         end
     end
 end
@@ -120,7 +120,7 @@ function text.update(dt, isNotebookOpen)
         timer = timer + textList[linesToDraw].speed
 
         if charToDraw > #current and isNotebookOpen == false then
-            timer = timer + textList[linesToDraw].speed * 25
+            timer = timer + textList[linesToDraw].speed * 15
             linesToDraw = linesToDraw + 1
             charToDraw = 0
         end

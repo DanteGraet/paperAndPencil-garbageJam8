@@ -11,11 +11,11 @@ difficultyScale = {
 }
 
 -- load highscores & settings
-highscores = "-------"
+highscores = string.rep("-", #difficultyScale)
 
 local i = 1
 if love.filesystem.getDirectoryItems("hiscore.jt") then    -- yes it's just a lua file 
-    highscores = love.filesystem.read("hiscore.jt") or "-------"
+    highscores = love.filesystem.read("hiscore.jt") or string.rep("-", #difficultyScale)
 end
 
 

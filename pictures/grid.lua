@@ -27,7 +27,7 @@ function level.generateObjects()
 
             obj.r = math.random(-100, 100)/200
 
-            if math.random(1, 7) == 1 then
+            if math.random(1, 10) == 1 then
                 obj = objectManager.get("empty"):new(-50 + x*250, -25 + y*250, nil, objectSize)
             end
 

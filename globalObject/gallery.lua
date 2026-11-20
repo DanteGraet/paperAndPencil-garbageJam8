@@ -65,6 +65,10 @@ function Gallery:new(size, timeScale, difficulty)
     obj.timeScale = timeScale or 1
     obj.difficulty = difficulty
 
+    obj.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+
+    --photo.x + 1500 -10, photo.y + 5*(125+35) + 10
+
     setmetatable(obj, {
         __index = Gallery,
     })
@@ -215,6 +219,10 @@ function Gallery:mousereleased(x, y)
             self.pictures[self.currentPhoto]:addToFinds(x, y)
         end
     end
+
+    if self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
+        self:nextPhoto()
+    end
 end
 
 local dodgeFlipFlop = false
@@ -261,6 +269,9 @@ end
 
 -- Holey Spaghetti Imma forghetti how this works
 function Gallery:draw()
+    local nextScale = (self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) and 1.2) or 1
+    if love.mouse.isDown(1) and nextScale == 1.2 then  nextScale = 0.9 end
+
     local clockToDraw = math.floor((timer*5) % 2) + 1
 
     for i = math.floor(self.visualPhoto), math.ceil(self.visualPhoto) do
@@ -292,26 +303,41 @@ function Gallery:draw()
                 love.graphics.setColor(0+c, 0, 0)
                 love.graphics.draw(clockImages.clock[clockToDraw], photo.x + 1400+100 + ox, 1030 - 367 + oy)
                 love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, 1, 1, 305/2, 214.5)
+
+                love.graphics.setColor(0, 0, 0)
+                fontManager.set("handwriting", 128)
+                love.graphics.printf(i .. "/" .. #self.pictures, photo.x - 65*2, 65, 1920, "right")
+
+                fontManager.set("handwriting", 38)
+                love.graphics.printf("Toggle notebook (SPACE)", photo.x - 65*2, 65 + 100, 1920, "right")
+                love.graphics.printf("Next page (SCROLL)", photo.x - 65*2, 65 + 100 + 38, 1920, "right")
+                love.graphics.printf("Draw (LMB)", photo.x - 65*2, 65 + 100+38*2, 1920, "right")
+                love.graphics.printf("Erase (RMB)", photo.x - 65*2, 65 + 100+38*3, 1920, "right")
+
                 love.graphics.setColor(1, 1, 1)
+
 
             elseif phase == "spotting" then
                 photo:drawWithScaleBonus()
 
                 photo:drawFinds(2, photo.x + 1500, photo.y)
-                love.graphics.draw(nextImages[clockToDraw], photo.x + 1500 -10, photo.y + 5*(125+35) + 10)
+                local img = nextImages[clockToDraw]
+                love.graphics.draw(img, photo.x + 1500 -10 + img:getWidth()/2, photo.y + 5*(125+35) + 10 + img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
             end
         else
             if i == #self.pictures + 1 and i == math.ceil(self.visualPhoto) and  phase == "spotting" then
                 local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
                 self:displayScore(1920 * sine)
                 love.graphics.setColor(1, 1, 1)
-                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 + 1920 * sine, 65 + 5*(125+35) + 10)
+                local img = nextImages[clockToDraw]
+                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 + 1920 * sine+ img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
 
             elseif i == #self.pictures + 2 and phase == "spotting" then
                 local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
                 love.graphics.translate(1920 * sine, 0)
 
-                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 - 1920, 65 + 5*(125+35) + 10)
+                local img = nextImages[clockToDraw]
+                love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 - 1920+ img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
                 self:displayScore(-1920)
                 tut.draw(false)
 

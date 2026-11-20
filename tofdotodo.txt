@@ -48,14 +48,14 @@ Creduts (Not chap7E)
 ✅highscore or someting
 
 
-Spot the difference
+✅Spot the difference
     ✅Make objects spawn (save)
     ✅make changes    (and save/mark them)
     ✅identify the changes
-    Add in Next Button
+    ✅Add in Next Button
     ✅Add in Score
 
-Paper & pencil
+✅Paper & pencil
     ✅Open/close canvas
     ✅Draw on canvas (ig points and md for line)
 
@@ -83,7 +83,7 @@ Diabolical  5       3       .9
 Good Luck   5       2       1
 
 
-make arrows clicklable*
+✅make arrows clicklable*
 Chess Level
 Wallpapers?
 garbage bins

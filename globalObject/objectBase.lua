@@ -55,6 +55,9 @@ end
 
 
 function ObjectBase:draw(imageNo, scaleBonus)
+    if self.variant == "blank" then
+        return
+    end
     local image = self.images[imageNo or 1]
 
     love.graphics.setColor(self.colour or {1,1,1})
