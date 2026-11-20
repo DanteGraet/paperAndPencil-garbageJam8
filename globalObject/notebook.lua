@@ -29,8 +29,13 @@ function Notebook:new(size)
     obj.pages = {}
     for i = 1, size do
         local page = Paper(15, 15)   -- 5050 is default for now A4is is default so who cares?
-        fontManager.set("quindocha", 32)
+        fontManager.set("handwriting", 64)
         page:mark(size - i + 1 .. "/" .. size, 16, 16)
+
+        fontManager.set("handwriting", 48)
+        page:mark("Next Page (SCROLL)", 16, 16, 1500 - 32, "right")
+        page:mark("Draw (LMB)", 16, 16 + 48, 1500 - 32, "right")
+        page:mark("Erase (RMB)", 16, 16 + 48*2, 1500 - 32, "right")
         table.insert(obj.pages, page) 
     end
 

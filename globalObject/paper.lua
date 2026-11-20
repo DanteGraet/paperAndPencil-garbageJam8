@@ -71,11 +71,11 @@ function Paper:reset()
     love.graphics.setCanvas()
 end
 
-function Paper:mark(text, x, y)
+function Paper:mark(text, x, y, limit, align)
     love.graphics.setCanvas(self.canvas)
     love.graphics.origin()
     love.graphics.setColor(penColour)
-    love.graphics.print(text, x, y)
+    love.graphics.printf(text, x, y, limit or 1500, align or "left")
 
     love.graphics.setCanvas()
 end

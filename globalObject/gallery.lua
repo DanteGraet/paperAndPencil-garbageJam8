@@ -12,16 +12,17 @@ local nextImages = {
 }
 
 local splash = {
-    "Hope you're notes are good",
-    "Take your time",
-    "10 guesses max",
-    "3-5 changes I think",
-    'love.graphics.printf(self.splash, x, 610, 1920, "center")',
-    "forghetti spaghetti",
-    "last minute notes?",
-    "Did you get that",
-    "Geez another text",
-    "Could be doin' anything else",
+    -- "Hope you're notes are good",
+    -- "Take your time",
+    -- "10 guesses max",
+    -- "3-5 changes I think",
+    -- 'love.graphics.printf(self.splash, x, 610, 1920, "center")',
+    -- "forghetti spaghetti",
+    -- "last minute notes?",
+    -- "Did you get that",
+    -- "Geez another text",
+    -- "Could be doin' anything else",
+    "Click the objects that have changed",
 }
 
 
@@ -66,13 +67,13 @@ function Gallery:new(size, timeScale, difficulty)
         table.insert(obj.pictures, picture)
 
         if #pictureTypes > 1 then
-            table.remove(pictureTypes, i)
+            table.remove(pictureTypes, n)
         end
         -- remove the picture type later TODO
     end
 
-    obj.currentPhoto = 1
-    obj.visualPhoto = 0
+    obj.currentPhoto = 0
+    obj.visualPhoto = -1
     obj.visualPhotoSine = 0
 
     obj.timeScale = timeScale or 1
@@ -88,7 +89,7 @@ function Gallery:new(size, timeScale, difficulty)
         __index = Gallery,
     })
 
-    obj.timeRemaining = ((obj.pictures[obj.currentPhoto] and obj.pictures[obj.currentPhoto].level.time) or 60) * obj.timeScale
+    obj.timeRemaining = ((obj.pictures[obj.currentPhoto] and obj.pictures[obj.currentPhoto].level.time) or math.huge) * obj.timeScale
     obj.lastTimeRemaining = 0
     
     obj:render()
@@ -224,7 +225,7 @@ function Gallery:nextPhoto()
 
     else
         self.lastTimeRemaining = self.timeRemaining
-        self.timeRemaining = 3 * self.timeScale
+        self.timeRemaining = math.huge
     end
 end
 
@@ -247,14 +248,17 @@ function Gallery:update(dt)
         self.timeRemaining = self.timeRemaining - dt
 
         if self.timeRemaining < 10 and dodgeFlipFlop == false then
+            local stressFade = math.min(1-(self.timeRemaining - 5)/ 5, 1)
             audioManager.setTargets({
                 always =    0.5,
                 draw =      1,
                 guess =     0,
                 piano =     1,
-                stress =    1,
+                stress =    stressFade,
             })
-            dodgeFlipFlop = true
+            if stressFade == 1 then
+                dodgeFlipFlop = true
+            end
         end
         if self.timeRemaining < 0 then 
             self:nextPhoto()
@@ -272,6 +276,11 @@ function Gallery:update(dt)
             local photo = self.pictures[i]
             photo.x = 65 - (self.visualPhotoSine-i)*1920
         end
+    end
+
+
+    if self.pictures[self.currentPhoto] then
+        self.pictures[self.currentPhoto]:update(dt, self)
     end
 
 
@@ -312,7 +321,7 @@ function Gallery:draw()
 
                 if time < 5 then
                     local r = math.random() * math.pi * 2
-                    local d = math.random() * (5-time)
+                    local d = math.random() * (5-time) * 5
                     ox = math.cos(r)*d
                     oy = math.sin(r)*d
                 end
@@ -321,14 +330,13 @@ function Gallery:draw()
                 love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, 1, 1, 305/2, 214.5)
 
                 love.graphics.setColor(0, 0, 0)
-                fontManager.set("handwriting", 128)
-                love.graphics.printf(i .. "/" .. #self.pictures, photo.x - 65*2, 65, 1920, "right")
+                fontManager.set("handwriting", 256 - 64)
+                love.graphics.printf(i .. "/" .. #self.pictures, photo.x + 1450, 65, 390, "center")
 
-                fontManager.set("handwriting", 38)
-                love.graphics.printf("Toggle notebook (SPACE)", photo.x - 65*2, 65 + 100, 1920, "right")
-                love.graphics.printf("Next page (SCROLL)", photo.x - 65*2, 65 + 100 + 38, 1920, "right")
-                love.graphics.printf("Draw (LMB)", photo.x - 65*2, 65 + 100+38*2, 1920, "right")
-                love.graphics.printf("Erase (RMB)", photo.x - 65*2, 65 + 100+38*3, 1920, "right")
+                fontManager.set("handwriting", 64)
+                love.graphics.printf("Notebook", photo.x + 1450, 65 + 128+32, 390, "center")
+                love.graphics.printf("(SPACE)",  photo.x + 1450, 65 + 128+96, 390, "center")
+
 
                 love.graphics.setColor(1, 1, 1)
 
@@ -363,8 +371,23 @@ function Gallery:draw()
                 end
                 love.graphics.translate(-1920 * sine, 0)
 
-            else
-                --love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10, 65 + 5*(125+35) + 10)
+            elseif not ((phase == "drawing" and i > 0) or (phase == "spotting" and i == 0)) and i < 3 then 
+                fontManager.set("handwriting", 128)
+                love.graphics.setColor(0, 0, 0)
+
+                local x = sine * 1920
+                if self.currentPhoto == 1 then
+                    x = - (1-sine)*1920
+                end
+
+                love.graphics.printf("Draw what you see", x, 500, 1920, "center")
+                fontManager.set("handwriting", 48)
+                love.graphics.printf("Be quick, theres a time limit", x, 610, 1920, "center")
+
+                love.graphics.setColor(1, 1, 1)
+                local img = nextImages[clockToDraw]
+                love.graphics.draw(nextImages[clockToDraw], x + 65 + 1500 -10 + img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
+
             end
 
             if (phase == "drawing" and i > 0) or (phase == "spotting" and i == 0) then
@@ -398,9 +421,9 @@ function Gallery:displayScore(ox)
         local photo = self.pictures[i]
         local y = photo.y + (125+35) * (i-1)
         local x = (65)
-        local maX = #photo.finds * (125+35) + 65
+        local maX = (#photo.finds + photo.missingMutations) * (125+35) + 65
 
-        photo:drawFinds(15, x + ox, y)
+        photo:drawFinds(15, x + ox, y, true)
 
         love.graphics.setColor(0, 0, 0)
 

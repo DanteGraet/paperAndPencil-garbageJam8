@@ -1,7 +1,7 @@
 local level = {}
 
 -- viewing time in secconds
-level.time = 20
+level.time = 30
 
 function level.loadObjects()
     objectManager.flush()
@@ -11,6 +11,7 @@ function level.loadObjects()
 
 
     objectManager.load("object/static/static.lua", "static")
+    objectManager.load("object/rectangle.lua", "rect")
 end
 
 
@@ -54,6 +55,8 @@ function level.generateObjects()
 
         table.insert(o, objectManager.get("skyObject"):new(x, y))
     end
+
+    table.insert(o, 1, objectManager.get("rect"):new(0, 700, 1400, 300, {.2, .7, .3}))
 
     return o, {104/255, 171/255, 197/255}
 end

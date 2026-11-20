@@ -24,6 +24,10 @@ local findImages = {
         love.graphics.newImage("assets/ui/finds/incorrect1.png"),
         love.graphics.newImage("assets/ui/finds/incorrect2.png"),
     },
+    unknown = {
+        love.graphics.newImage("assets/ui/finds/unknown1.png"),
+        love.graphics.newImage("assets/ui/finds/unknown2.png"),
+    },
 }
 
 
@@ -68,6 +72,8 @@ function Photo:new(x, y, level)
     obj.findImage = math.random(1, 2)
 
     obj.frameColour = frameColours[math.random(1, #frameColours)]
+
+    obj.outOfGuesses = -1
 
     obj.canvases = {
         love.graphics.newCanvas(1400, 950),
@@ -159,6 +165,9 @@ end
 
 
 function Photo:addToFinds(x, y)
+    if self.outOfGuesses >= 0 then
+        return
+    end
 
     if #self.finds >= 10 then
         -- Play Sound
@@ -180,7 +189,16 @@ function Photo:addToFinds(x, y)
         local outline = "incorrect"
 
         if object.hasMutated == true then
+            object.found = true
             outline = "correct"
+            self.missingMutations = self.missingMutations - 1
+        else
+            if #self.finds + self.missingMutations >= 10 then
+                self.outOfGuesses = 0
+                audioManager.playSound(audio.incorrect, 0.2)
+
+                return
+            end
         end
 
         audioManager.playSound(audio[outline], 0.2)
@@ -188,6 +206,10 @@ function Photo:addToFinds(x, y)
         local t = {index, outline}
 
         table.insert(self.finds, t)
+
+        if self.missingMutations == 0 then
+            self.outOfGuesses = 0
+        end
     end
 end
 
@@ -215,9 +237,18 @@ function Photo:render(canvasNo, scaleHoverd)
 end
 
 
-function Photo:permutate(count)
-    self.changes = self.level.permutate(self.objects, count or 3)
+function Photo:permutate()
+    self.level.permutate(self.objects)
+    
+    local c = 0
+    for i = 1,#self.objects do
+        if self.objects[i].hasMutated then
+            c = c + 1
+        end
+    end
 
+    -- none of these are found
+    self.missingMutations = c
     self:render(1)
     self:render(2)
 end
@@ -247,11 +278,24 @@ end
 function Photo:drawWithScaleBonus()
     local canvasToDraw = math.floor((timer*5) % 2) + 1
 
-    self:render(canvasToDraw, true)
+    self:render(canvasToDraw, self.outOfGuesses < 0)
     love.graphics.origin()
     camera()
 
     love.graphics.draw(self.canvases[canvasToDraw], self.x, self.y)
+
+    if self.outOfGuesses > 0 then
+        love.graphics.setColor(1, 1, 1, tweens.sineInOut(self.outOfGuesses)/2)
+        love.graphics.rectangle("fill", self.x, self.y, 1400, 950)
+        love.graphics.setColor(0, 0, 0, tweens.sineInOut(math.min(self.outOfGuesses*2, 1)))
+        fontManager.set("handwriting", 128)
+
+        local text = "Out of Guesses"
+        if self.missingMutations == 0 then
+            text = "All Changes Found"
+        end
+        love.graphics.printf(text, self.x, 600 - tweens.sineInOut(math.min(self.outOfGuesses*2, 1))*50, 1400, "center")
+    end
 
     love.graphics.setColor(self.frameColour)
     love.graphics.draw(frameImages[canvasToDraw], self.x - 50, self.y - 50)
@@ -273,14 +317,25 @@ function Photo:draw()
     self:drawDebug()
 end
 
-function Photo:drawFinds(col, ox, oy)
+function Photo:update(dt, gal)
+    if self.outOfGuesses >= 0 then
+        self.outOfGuesses = math.min(self.outOfGuesses + dt, 1)
+
+        if self.outOfGuesses == 1 then
+            gal:nextPhoto()
+        end
+    end
+end
+
+function Photo:drawFinds(col, ox, oy, drawMissing)
     local canvasToDraw = math.floor(((timer*5) + self.findImage) % 2) + 1
 
     -- love.graphics.draw(nextImages[canvasToDraw], self.x + 1500 -10, self.y + 5*(125+35) + 10)
 
 
     love.graphics.setLineWidth(4)
-    if #self.finds == 0 then return end
+    --if #self.finds == 0 then return end
+
 
     for i = 1, #self.finds do
         local x = ox + (125+35)*((i-1) % col)
@@ -308,6 +363,58 @@ function Photo:drawFinds(col, ox, oy)
 
         if findImages[self.finds[i][2]] then
             love.graphics.draw(findImages[self.finds[i][2]][canvasToDraw], x - 10, y - 10)
+        end
+    end
+
+    if not drawMissing then
+        love.graphics.setColor(1, 1, 1)
+        for j = 1, self.missingMutations do
+            local i = j + #self.finds
+
+            local x = ox + (125+35)*((i-1) % col)
+            local y = oy + math.floor((i-1)/col)*(125+35) + 10
+
+
+            love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
+            love.graphics.draw(findImages.unknown[canvasToDraw], x - 10, y - 10)
+        end
+    else
+        local current = 1
+        for j = 1, self.missingMutations do
+            local i = j + #self.finds
+
+            local x = ox + (125+35)*((i-1) % col)
+            local y = oy + math.floor((i-1)/col)*(125+35) + 10
+
+
+            local object
+            for i = current, #self.objects do
+                if self.objects[i].hasMutated and not self.objects[i].found then
+                    object = self.objects[i]
+
+                    current = i+1
+                    break
+
+                end
+            end
+
+
+            local image = (object.images and object.images[canvasToDraw]) or nil
+            
+            local scale = (image and math.min(125/image:getWidth(), 125/image:getHeight())) or 0
+
+            love.graphics.setColor(0.5, 0.5, 0.5)
+
+            love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
+
+            if image then
+
+                love.graphics.draw(image, x, y, 0, scale, scale)
+            end
+            love.graphics.setColor(1, 1, 1)
+
+            love.graphics.draw(findImages.miss[canvasToDraw], x - 10, y - 10)
+
         end
     end
 
