@@ -91,7 +91,7 @@ function Photo:new(x, y, level)
 
 
     obj.level.loadObjects()
-    obj.objects, obj.bgColour = obj.level.generateObjects()
+    obj.objects, obj.bgColour, obj.bg = obj.level.generateObjects()
 
     -- obj:render(1)
     -- obj:render(2)
@@ -223,6 +223,11 @@ function Photo:render(canvasNo, scaleHoverd)
     love.graphics.setCanvas(self.canvases[canvasNo])
     love.graphics.origin()
     love.graphics.clear(self.bgColour or {1, 1, 1})
+
+    if self.bg then
+        love.graphics.setColor(self.bgColour or {1, 1, 1})
+        love.graphics.draw(self.bg)
+    end
 
     local scaleIndex
     local scaleBonus
