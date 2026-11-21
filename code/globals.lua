@@ -13,11 +13,12 @@ difficultyScale = {
     {name = "Good luck"   , photos = 3, pages = 1, timeMult = 0.6},
 }
 
+
 -- load highscores & settings
 highscores = string.rep("-", #difficultyScale)
 
 local i = 1
-if love.filesystem.getDirectoryItems("hiscore.jt") then    -- yes it's just a lua file 
+if love.filesystem.getInfo("hiscore.jt") then    -- yes it's just a lua file 
     highscores = love.filesystem.read("hiscore.jt") or string.rep("-", #difficultyScale)
 end
 
@@ -27,7 +28,7 @@ settings = {
     music = 2
 }
 
-if love.filesystem.getDirectoryItems("settings.jt") then
+if love.filesystem.getInfo("settings.jt") then
     local s = love.filesystem.read("settings.jt")
     
     if s then

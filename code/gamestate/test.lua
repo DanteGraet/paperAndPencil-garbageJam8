@@ -6,23 +6,33 @@ local gallery
 local difficulty
 local lastFrameCanvas
 
-function g.load(diff, lf)
-    difficulty = diff or 2
-    lastFrameCanvas = lf
+function isNotebookOpen()
+    return notebook.isOpen
+end
 
-    notebook = Notebook(difficultyScale[difficulty].pages)
-    notebook.isOpen = false
-    --photo = Photo(65, 65, "grid")
+function g.load(diff, lf)
+    difficulty = diff or 0
 
     camera = Camera("fit", 1920, 1080)
     timer = 0
-
     phase = "drawing"
 
-    gallery = Gallery(difficultyScale[difficulty].photos, difficultyScale[difficulty].timeMult, difficulty)
-    love.mouse.setVisible(true)
+    if difficulty ~= 0 then
+        lastFrameCanvas = lf
 
-    --photo:render(1)
+        notebook = Notebook(difficultyScale[difficulty].pages)
+        notebook.isOpen = false
+
+        gallery = Gallery(difficultyScale[difficulty].photos, difficultyScale[difficulty].timeMult, difficulty)
+    else
+        -- run the toutorial
+        notebook = Notebook(2)
+        notebook.isOpen = false
+
+        gallery = Gallery(1, 100, 0)
+    end
+
+    love.mouse.setVisible(true)
 
     audioManager.setTargets({
         always =    1,

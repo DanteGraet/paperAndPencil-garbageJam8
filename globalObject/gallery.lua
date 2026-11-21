@@ -174,10 +174,14 @@ function Gallery:nextPhoto()
 
     if self.pictures[self.currentPhoto] then
         if phase == "spotting" then
+
             if self.pictures[self.currentPhoto] then
                 self.pictures[self.currentPhoto]:permutate()
             end
         else
+            -- self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+            self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35) - 160, 305, 305)
+            print("larger Collider")
             audioManager.setTargets({
                 always =    1,
                 draw =      1,
@@ -191,44 +195,49 @@ function Gallery:nextPhoto()
         end
 
     elseif phase == "spotting" then
+
         -- Save to highscore
-        local total = 0
-        for i = 1,#self.pictures do
-            local photo = self.pictures[i]
-            local score, miss, totalMods = photo:getScore()
-            total = total + score
-        end
-
-
-        local percent = math.floor(total/#self.pictures * 100)
-        local current = highscores:sub(self.difficulty, self.difficulty)
-        local override = true
-
-        for i = 1,#grades do
-            if grades[i][1] == current then
-                break
+        if self.difficulty > 0 then
+            local total = 0
+            for i = 1,#self.pictures do
+                local photo = self.pictures[i]
+                local score, miss, totalMods = photo:getScore()
+                total = total + score
             end
 
-            if total/#self.pictures >= grades[i][2] then
-                -- we have not yet found a grade this good, set it as the highscore
-                highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
-                break
-            end
-        end
 
-        audioManager.setTargets({
-            always =    0.5,
-            draw =      0,
-            guess =     1,
-            piano =     0,
-            stress =    0,
-        })
+            local percent = math.floor(total/#self.pictures * 100)
+            local current = highscores:sub(self.difficulty, self.difficulty)
+            local override = true
+
+            for i = 1,#grades do
+                if grades[i][1] == current then
+                    break
+                end
+
+                if total/#self.pictures >= grades[i][2] then
+                    -- we have not yet found a grade this good, set it as the highscore
+                    highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
+                    break
+                end
+            end
+
+            audioManager.setTargets({
+                always =    0.5,
+                draw =      0,
+                guess =     1,
+                piano =     0,
+                stress =    0,
+            })
+        end
 
         tut.generateTextList()
 
     else
         self.lastTimeRemaining = self.timeRemaining
         self.timeRemaining = math.huge
+
+        self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
     end
 end
 
@@ -288,7 +297,7 @@ function Gallery:update(dt)
 
 
     -- edge case haha
-    if self.visualPhoto < 1 and phase == "spotting" then
+    if self.visualPhoto < 0 and phase == "spotting" then
         local photo = self.pictures[#self.pictures]
         photo.x = 65 - (self.visualPhotoSine)*1920
     end
@@ -297,14 +306,27 @@ end
 
 -- Holey Spaghetti Imma forghetti how this works
 function Gallery:draw()
-    local nextScale = (self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) and 1.2) or 1
-    if love.mouse.isDown(1) and nextScale == 1.2 then  nextScale = 0.9 end
+    local nextScale = 1
+    
+    if not isNotebookOpen() and self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) then
+        if love.mouse.isDown(1) then
+            nextScale = 0.9
+        else
+            nextScale = 1.2
+        end
+    end
+    -- (self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) and 1.2) or 1
+    -- if isNotebookOpen() then
+    --     nextScale = 1
+    -- end
+
+    --if love.mouse.isDown(1) and nextScale == 1.2 then  nextScale = 0.9 end
 
     local clockToDraw = math.floor((timer*5) % 2) + 1
 
     for i = math.floor(self.visualPhoto), math.ceil(self.visualPhoto) do
         local photo = self.pictures[i]
-
+        
         -- if i == 0 and phase == "spotting" then
         --     photo = self.pictures[#self.pictures]
         -- end
@@ -329,8 +351,11 @@ function Gallery:draw()
                     oy = math.sin(r)*d
                 end
                 love.graphics.setColor(0+c, 0, 0)
-                love.graphics.draw(clockImages.clock[clockToDraw], photo.x + 1400+100 + ox, 1030 - 367 + oy)
-                love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, 1, 1, 305/2, 214.5)
+                if nextScale == 1.2 then
+                    nextScale = 1.1
+                end
+                love.graphics.draw(clockImages.clock[clockToDraw], photo.x + 1400+100 + ox + 305/2, 1030 - 367 + oy + 214.5, 0, nextScale, nextScale, 305/2, 214.5)
+                love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, nextScale, nextScale, 305/2, 214.5)
 
                 love.graphics.setColor(0, 0, 0)
                 fontManager.set("handwriting", 256 - 64)
@@ -384,7 +409,7 @@ function Gallery:draw()
                 end
                 love.graphics.translate(-1920 * sine, 0)
 
-            elseif not ((phase == "drawing" and i > 0) or (phase == "spotting" and i == 0)) and i < 3 then 
+            elseif not ((phase == "drawing" and i > 0) or (phase == "spotting" and i == 0)) and i < 1 then 
                 fontManager.set("handwriting", 128)
                 love.graphics.setColor(0, 0, 0)
 
