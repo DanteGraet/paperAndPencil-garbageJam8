@@ -52,8 +52,9 @@ function StoveTop:brandNewVariant()
 
         newVariant = variants[varIdx]
 
-        obj.r = math.random() * math.pi * 2
     end
+
+    self.r = math.random() * math.pi * 2
 
     self.variant = newVariant
 
