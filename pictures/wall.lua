@@ -65,7 +65,7 @@ function level.generateObjects()
         end
     end
 
-    return o, colours[math.random(1,#colours)], love.graphics.load("object/background/wallpaper" .. math.random(1, 4) .. ".png")
+    return o, colours[math.random(1,#colours)], love.graphics.newImage("object/background/wallpaper" .. math.random(1, 4) .. ".png")
 end
 
 function level.permutate(objects)
