@@ -1,6 +1,6 @@
 local name = "Jot the Difference"
 local VERSION = "V1.0"
-DEV = true  
+DEV = false  
 
 local TARGET_WIDTH = 1920
 local TARGET_HEIGHT = 1080
@@ -8,7 +8,7 @@ local TARGET_HEIGHT = 1080
 function love.conf(t)
     -- General
     t.window.title = name.." "..VERSION         -- The window title (string)
-    --t.window.icon = "image/icon/icon256.png"    -- Filepath to an image to use as the window's icon (string)
+    t.window.icon = "assets/ui/pencil1.png"    -- Filepath to an image to use as the window's icon (string)
 
     t.window.width = TARGET_WIDTH/2                     -- The window width (number)
     t.window.height = TARGET_HEIGHT/2                   -- The window height (number)

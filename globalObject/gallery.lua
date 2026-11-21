@@ -246,8 +246,8 @@ function Gallery:nextPhoto()
     end
 end
 
-function Gallery:mousereleased(x, y)
-    if phase == "spotting" then
+function Gallery:mousereleased(x, y, notebookOpen)
+    if phase == "spotting" and (not notebookOpen) then
         if self.pictures[self.currentPhoto] then
             self.pictures[self.currentPhoto]:addToFinds(x, y)
         end
@@ -313,7 +313,7 @@ end
 function Gallery:draw()
     local nextScale = 1
     
-    if not isNotebookOpen() and self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) then
+    if self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) then
         if love.mouse.isDown(1) then
             nextScale = 0.9
         else

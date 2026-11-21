@@ -6,10 +6,6 @@ local gallery
 local difficulty
 local lastFrameCanvas
 
-function isNotebookOpen()
-    return notebook.isOpen
-end
-
 function g.load(diff, lf)
     difficulty = diff or 0
 
@@ -34,7 +30,7 @@ function g.load(diff, lf)
         love.graphics.setColor(1, 1, 1)
         love.graphics.draw(img, 50, 50)
         love.graphics.setCanvas()
-        
+
         notebook.isOpen = false
 
 
@@ -87,11 +83,10 @@ function g.mousereleased(x, y, button)
             notebook:endDraw(true)
         end
     -- end
-    else
+    end
 
-        if button == 1 then
-            gallery:mousereleased(x, y)
-        end
+    if button == 1 then
+        gallery:mousereleased(x, y, notebook.isOpen)
     end
 end
 
