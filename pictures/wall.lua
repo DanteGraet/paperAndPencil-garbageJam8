@@ -4,6 +4,15 @@ local level = {}
 level.time = 25
 local swapChance = 0
 
+local colours = {
+    {1, .8, .8},
+    {.8, 1, .8},
+    {.8, .8, 1},
+    {1, 1, .8},
+    {.8, 1, 1},
+    {1, .8, 1},
+}
+
 function level.loadObjects()
     objectManager.flush()
 
@@ -56,7 +65,7 @@ function level.generateObjects()
         end
     end
 
-    return o
+    return o, colours[math.random(1,#colours)], love.graphics.load("object/background/wallpaper" .. math.random(1, 4) .. ".png")
 end
 
 function level.permutate(objects)
