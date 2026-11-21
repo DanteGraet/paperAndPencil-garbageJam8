@@ -100,11 +100,13 @@ function level.generateObjects()
         {"Bw", "Bw", "Nw", "Nw"},         -- Minor
         {"Pw", "Pw", "Pw", "Pw", "Pw", "Pw", "Pw", "Pw"},         -- Pawns
     }
-    removeRandom(whitePeices[2])
     for i = 1, math.random(1, 2) do
+        removeRandom(whitePeices[2])
+    end
+    for i = 1, math.random(2, 3) do
         removeRandom(whitePeices[3])
     end
-    for i = 1, math.random(1, 4) do
+    for i = 1, math.random(3, 5) do
         removeRandom(whitePeices[4])
     end
     local blackPeices = {
@@ -113,11 +115,13 @@ function level.generateObjects()
         {"Bb", "Bb", "Nb", "Nb"},         -- Minor
         {"Pb", "Pb", "Pb", "Pb", "Pb", "Pb", "Pb", "Pb"},         -- Pawns
     }
-    removeRandom(blackPeices[2])
     for i = 1, math.random(1, 2) do
+        removeRandom(blackPeices[2])
+    end
+    for i = 1, math.random(2, 3) do
         removeRandom(blackPeices[3])
     end
-    for i = 1, math.random(1, 4) do
+    for i = 1, math.random(2, 5) do
         removeRandom(blackPeices[4])
     end
 
@@ -155,8 +159,8 @@ function level.permutate(objects)
 
     local changesToMake = math.random(3, 5)
     for i = 1, math.min(16, #choices) do        --16 attempts
-        if math.random(1, 3) == 1 then 
-            local obj = nextPeice(missingPeices[math.random(1, #missingPeices)], board)
+        if #missingPeices > 0 and  math.random(1, 3) == 1 then 
+            local obj = nextPeice({missingPeices}, board)
             obj.hasMutated = true
 
             table.insert(objects, obj)
