@@ -58,21 +58,26 @@ function Gallery:new(size, timeScale, difficulty)
 
     local obj = {}
 
-    local pictureTypes = love.filesystem.getDirectoryItems("pictures")
     obj.pictures = {}
-    for i = 1, size do
-        local n = math.random(1, #pictureTypes)
-        local picture = Photo(65 + 1920*(i-1), 65, pictureTypes[n])
+    if difficulty ~= 0 then
+        local pictureTypes = love.filesystem.getDirectoryItems("pictures")
+        for i = 1, size do
+            local n = math.random(1, #pictureTypes)
+            local picture = Photo(65 + 1920*(i-1), 65, pictureTypes[n])
 
-        table.insert(obj.pictures, picture)
+            table.insert(obj.pictures, picture)
 
-        table.remove(pictureTypes, n)
+            table.remove(pictureTypes, n)
 
-        -- reset picture types if required
-        if #pictureTypes == 0 then
-            pictureTypes = love.filesystem.getDirectoryItems("pictures")
+            -- reset picture types if required
+            if #pictureTypes == 0 then
+                pictureTypes = love.filesystem.getDirectoryItems("pictures")
+            end
+            -- remove the picture type later TODO
         end
-        -- remove the picture type later TODO
+    else
+        local picture = Photo(65 , 65, "tutorial")
+        table.insert(obj.pictures, picture)
     end
 
     obj.currentPhoto = 0
@@ -383,6 +388,8 @@ function Gallery:draw()
                     fontManager.set("handwriting", 64)
                     love.graphics.printf("Notebook", photo.x + 1450, y + 32, 390, "center")
                     love.graphics.printf("(SPACE)",  photo.x + 1450, y + 96, 390, "center")
+
+                    love.graphics.setColor(1, 1, 1)
                 end
 
             end

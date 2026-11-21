@@ -26,8 +26,17 @@ function g.load(diff, lf)
         gallery = Gallery(difficultyScale[difficulty].photos, difficultyScale[difficulty].timeMult, difficulty)
     else
         -- run the toutorial
+        local img = love.graphics.newImage("object/background/controls.png")
         notebook = Notebook(2)
+
+        love.graphics.setCanvas(notebook.pages[2].canvas)
+        love.graphics.origin()
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.draw(img, 50, 50)
+        love.graphics.setCanvas()
+        
         notebook.isOpen = false
+
 
         gallery = Gallery(1, 100, 0)
     end

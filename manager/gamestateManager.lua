@@ -1,8 +1,8 @@
 local gamestateFolder = "code/gamestate/"
 local initialGamestate = (love.filesystem.getInfo("settings.jt") and "titleScreen") or "test"
 
-print("Inital State:", initialGamestate, love.filesystem.getInfo("settings.jt"))
-initialGamestate = "test"
+-- print("Inital State:", initialGamestate, love.filesystem.getInfo("settings.jt"))
+-- initialGamestate = "test"
 local eventPriority = 0
 
 gamestateManager = {}

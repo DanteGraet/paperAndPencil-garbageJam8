@@ -61,7 +61,12 @@ setmetatable(Photo, {
 function Photo:new(x, y, level)
     local obj = {}
 
-    obj.level = love.filesystem.load("pictures/" .. level)()
+    if level == "tutorial" then
+        obj.level = love.filesystem.load("tutorial.lua")()
+    else
+        obj.level = love.filesystem.load("pictures/" .. level)()
+    end
+
     obj.objects = {}
     obj.changes = {}
 
