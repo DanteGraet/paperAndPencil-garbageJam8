@@ -5,6 +5,11 @@ level.time = 30
 
 local objectManager = ObjectManager()
 
+function level.cleanUp()
+    objectManager = nil
+    level.time = nil
+end
+
 function level.loadObjects()
     objectManager:flush()
 

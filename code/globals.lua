@@ -60,3 +60,9 @@ function love.quit()
     love.filesystem.write("hiscore.jt", highscores)
     love.filesystem.write("settings.jt", settings.SFX .. settings.music)
 end
+
+addEvent("keypressed", function(key)
+    if key == "f11" then
+        love.window.setFullscreen(not love.window.getFullscreen())
+    end
+end, 1)

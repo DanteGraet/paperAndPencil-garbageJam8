@@ -3,9 +3,14 @@ local level = {}
 -- viewing time in secconds
 level.time = 20
 local swapChance = 0
-
-
 local objectManager = ObjectManager()
+
+function level.cleanUp()
+    objectManager = nil
+    level.time = nil
+
+    swapChance = nil
+end
 
 function level.loadObjects()
     objectManager:flush()
@@ -39,7 +44,7 @@ function level.generateObjects()
         end
     end
 
-    return o
+    return o, nil, love.graphics.newImage("object/background/wood.png")
 end
 
 function level.permutate(objects)

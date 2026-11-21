@@ -15,6 +15,14 @@ local colours = {
 
 local objectManager = ObjectManager()
 
+function level.cleanUp()
+    objectManager = nil
+    level.time = nil
+
+    swapChance = nil
+    colours = nil
+end
+
 function level.loadObjects()
     objectManager:flush()
 
