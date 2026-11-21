@@ -127,7 +127,7 @@ function Photo:getScore()
     end
 
     local foundPortion = foundModifications / totalModifications
-    local wrongPortion = incorectIdentifications / (count - totalModifications)
+    local wrongPortion = incorectIdentifications / (count - totalModifications - self.missingMutations)
 
     -- so this does mean its better to guess once when you got no idea but idk how to fix that
     local score = (foundPortion / 2 + 0.5) * (1 - wrongPortion)

@@ -350,6 +350,16 @@ function Gallery:draw()
                 photo:drawFinds(2, photo.x + 1500, photo.y)
                 local img = nextImages[clockToDraw]
                 love.graphics.draw(img, photo.x + 1500 -10 + img:getWidth()/2, photo.y + 5*(125+35) + 10 + img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
+
+                if #photo.finds + (photo.missingMutations or 0) <= 8 then
+                    y = 4*(125+35) + 10 + 32 + 16
+                    
+                    love.graphics.setColor(0, 0, 0)
+                    fontManager.set("handwriting", 64)
+                    love.graphics.printf("Notebook", photo.x + 1450, y + 32, 390, "center")
+                    love.graphics.printf("(SPACE)",  photo.x + 1450, y + 96, 390, "center")
+                end
+
             end
         else
             local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)

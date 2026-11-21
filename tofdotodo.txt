@@ -28,7 +28,7 @@ level ideas:
     bookshelf/shelf/library
     ocean
     cuircut diagram
-    cityscape
+✅    cityscape
 ✅    stuff on a wall
 
     box o chocklate
