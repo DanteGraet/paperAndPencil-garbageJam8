@@ -4,7 +4,7 @@ EmptyObject.__index = EmptyObject
 setmetatable(EmptyObject, {__index = ObjectBase})
 
 
-function EmptyObject:new(x, y, var, size)
+function EmptyObject:new(objectManager, x, y, var, size)
     local colliders = {
         ElipticalCollider(0, 0, size*0.8 or 50, size*0.8 or 50)
     }

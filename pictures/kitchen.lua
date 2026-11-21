@@ -5,13 +5,15 @@ level.time = 15
 local swapChance = 0
 local potI
 
+local objectManager = ObjectManager()
+
 function level.loadObjects()
-    objectManager.flush()
+    objectManager:flush()
 
-    objectManager.load("object/fruit/fruit.lua", "fruit", {"benchTop", "inPot"})
-    objectManager.load("object/utensil/utensil.lua", "utensil", {"benchTop"})
+    objectManager:load("object/fruit/fruit.lua", "fruit", {"benchTop", "inPot"})
+    objectManager:load("object/utensil/utensil.lua", "utensil", {"benchTop"})
 
-    objectManager.load("object/stoveTop/stoveTop.lua", "stoveTop")
+    objectManager:load("object/stoveTop/stoveTop.lua", "stoveTop")
 end
 
 
@@ -24,10 +26,10 @@ function level.generateObjects()
 
     for i = 0, 3 do
         local x, y = 245 + 460*(i % 2), 255 + 440 * math.floor(i/2)
-        local obj = objectManager.get("stoveTop"):new(x, y)
+        local obj = objectManager:get("stoveTop"):new(objectManager, x, y)
 
         if i == potI then
-            obj, extras = objectManager.get("stoveTop"):new(x, y, "pot")
+            obj, extras = objectManager:get("stoveTop"):new(objectManager, x, y, "pot")
 
             for j = 1, #extras do
                 table.insert(o, extras[j])
@@ -43,7 +45,7 @@ function level.generateObjects()
     end
 
     for y = 1, 3 do
-        local obj = objectManager.getRandom("benchTop"):new(-50 + 5*250, -25 + y*250, nil, objectSize)
+        local obj = objectManager:getRandom("benchTop"):new(objectManager, -50 + 5*250, -25 + y*250, nil, objectSize)
 
         obj.r = math.random(-100, 100)/150
 

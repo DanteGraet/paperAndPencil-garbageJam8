@@ -27,7 +27,7 @@ Building.__index = Building
 setmetatable(Building, {__index = ObjectBase})
 
 
-function Building:new(x, y)
+function Building:new(objectManager, x, y)
     local variant = variants[math.random(1, #variants)]
 
 

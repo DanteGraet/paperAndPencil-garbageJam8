@@ -13,18 +13,20 @@ local colours = {
     {1, .8, 1},
 }
 
+local objectManager = ObjectManager()
+
 function level.loadObjects()
-    objectManager.flush()
+    objectManager:flush()
 
-    objectManager.load("object/frame/photoFrame.lua", "photoFrame", {"wallBase"})
-    objectManager.load("object/shelf/shelf.lua", "shelf", {"wallBase"})-- shelf
+    objectManager:load("object/frame/photoFrame.lua", "photoFrame", {"wallBase"})
+    objectManager:load("object/shelf/shelf.lua", "shelf", {"wallBase"})-- shelf
 
-    objectManager.load("object/window/window.lua", "window")-- shelf
-    objectManager.load("object/clock/clock.lua", "clock")-- shelf
+    objectManager:load("object/window/window.lua", "window")-- shelf
+    objectManager:load("object/clock/clock.lua", "clock")-- shelf
 
-    objectManager.load("object/chess/chessPiece.lua", "chessPiece", {"full"})
-    objectManager.load("object/fruit/fruit.lua", "fruit", {"full"})
-    objectManager.load("object/empty.lua", "empty")
+    objectManager:load("object/chess/chessPiece.lua", "chessPiece", {"full"})
+    objectManager:load("object/fruit/fruit.lua", "fruit", {"full"})
+    objectManager:load("object/empty.lua", "empty")
 end
 
 
@@ -42,14 +44,14 @@ function level.generateObjects()
             local obj
             local extra
             if x + y * 3 == clockPos then
-                obj = objectManager.get("clock"):new(xPos, yPos, nil, objectSize)
+                obj = objectManager:get("clock"):new(objectManager, xPos, yPos, nil, objectSize)
             elseif x + y * 3 == windowPos then
-                obj = objectManager.get("window"):new(xPos, yPos, nil, objectSize)
+                obj = objectManager:get("window"):new(objectManager, xPos, yPos, nil, objectSize)
             else
                 if math.random(1, 4) == 1 then
-                    obj, extra = objectManager.get("shelf"):new(xPos, yPos, nil, objectSize)
+                    obj, extra = objectManager:get("shelf"):new(objectManager, xPos, yPos, nil, objectSize)
                 else
-                    obj, extra = objectManager.get("photoFrame"):new(xPos, yPos, nil, objectSize)
+                    obj, extra = objectManager:get("photoFrame"):new(objectManager, xPos, yPos, nil, objectSize)
                 end
             end
 
@@ -85,7 +87,7 @@ function level.permutate(objects)
         table.remove(choices, r)
 
         if math.random() < swapChance then
-            obj =  objectManager.getRandom():new(obj.x, obj.y)
+            obj =  objectManager:getRandom():new(objectManager, obj.x, obj.y)
             obj.sx = 250/(obj.ox*2)
             obj.sy = 250/(obj.ox*2)
 

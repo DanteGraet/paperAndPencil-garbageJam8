@@ -26,7 +26,7 @@ ChessPiece.__index = ChessPiece
 setmetatable(ChessPiece, {__index = ObjectBase})
 
 
-function ChessPiece:new(x, y, var, size)
+function ChessPiece:new(objectManager, x, y, var, size)
     local variant = var or variants[math.random(1, #variants)]
 
     local colliders = {

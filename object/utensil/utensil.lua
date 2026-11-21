@@ -19,7 +19,7 @@ Utensil.__index = Utensil
 setmetatable(Utensil, {__index = ObjectBase})
 
 
-function Utensil:new(x, y, var)
+function Utensil:new(objectManager, x, y, var)
     local variant = var or variants[math.random(1, #variants)]
 
     local r = images[variant][1]:getWidth()/2

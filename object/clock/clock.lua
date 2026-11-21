@@ -15,7 +15,7 @@ Clock.__index = Clock
 setmetatable(Clock, {__index = ObjectBase})
 
 
-function Clock:new(x, y)
+function Clock:new(objectManager, x, y)
     local colliders = {
         ElipticalCollider(0, 0, 150, 150)
     }

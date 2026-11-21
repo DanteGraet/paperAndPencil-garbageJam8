@@ -17,7 +17,7 @@ SkyObject.__index = SkyObject
 setmetatable(SkyObject, {__index = ObjectBase})
 
 
-function SkyObject:new(x, y, var)
+function SkyObject:new(objectManager, x, y, var)
     local variant = var or variants[math.random(1, #variants)]
 
     local colliders = {

@@ -26,7 +26,7 @@ PhotoFrame.__index = PhotoFrame
 setmetatable(PhotoFrame, {__index = ObjectBase})
 
 
-function PhotoFrame:new(x, y)
+function PhotoFrame:new(objectManager, x, y)
     local variant = variants[math.random(1, #variants)]
 
     local colliders = {
@@ -47,7 +47,7 @@ function PhotoFrame:new(x, y)
     })
 
     local extra = {
-        objectManager.getRandom("full"):new(x, y, nil, 150)
+        objectManager:getRandom("full"):new(objectManager, x, y, nil, 150)
     }
 
     return obj, extra

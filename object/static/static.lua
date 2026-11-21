@@ -8,7 +8,7 @@ Static.__index = Static
 setmetatable(Static, {__index = ObjectBase})
 
 
-function Static:new(x, y, var)
+function Static:new(objectManager, x, y, var)
     local images = {
         love.graphics.newImage("object/static/" .. var .. "1.png"),
         love.graphics.newImage("object/static/" .. var .. "2.png")

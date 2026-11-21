@@ -10,11 +10,13 @@ local backgroundColours = {
     {0.4, 0.1, 0.2},
 }
 
-function level.loadObjects()
-    objectManager.flush()
+local objectManager = ObjectManager()
 
-    objectManager.load("object/chess/chessPiece.lua", "chessPiece")
-    objectManager.load("object/fruit/fruit.lua", "fruit")
+function level.loadObjects()
+    objectManager:flush()
+
+    objectManager:load("object/chess/chessPiece.lua", "chessPiece")
+    objectManager:load("object/fruit/fruit.lua", "fruit")
 end
 
 
@@ -31,7 +33,7 @@ function level.generateObjects()
             1400, 950
             ]]
 
-            local obj = objectManager.getRandom():new(700 + xPos, yPos, nil, size)
+            local obj = objectManager:getRandom():new(objectManager, 700 + xPos, yPos, nil, size)
 
 
             obj.r = math.random(-100, 100)/100
@@ -60,7 +62,7 @@ function level.permutate(objects)
         table.remove(choices, r)
 
         if math.random() < swapChance then
-            obj =  objectManager.getRandom():new(obj.x, obj.y)
+            obj =  objectManager:getRandom():new(objectManager, obj.x, obj.y)
             obj.sx = 250/(obj.ox*2)
             obj.sy = 250/(obj.ox*2)
             obj.r = math.random(-100, 100)/200

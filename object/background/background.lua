@@ -4,7 +4,7 @@ Background.__index = Background
 setmetatable(Background, {__index = ObjectBase})
 
 
-function Background:new(var, colour)
+function Background:new(objectManager, var, colour)
     local image = love.graphics.newImage("object/background/" .. var .. ".png")
 
     -- im hoping this just stores a 

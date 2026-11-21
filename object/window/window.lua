@@ -22,7 +22,7 @@ Window.__index = Window
 setmetatable(Window, {__index = ObjectBase})
 
 
-function Window:new(x, y, var)
+function Window:new(objectManager, x, y, var)
     local variant = var or variants[math.random(1, #variants)]
 
     local colliders = {

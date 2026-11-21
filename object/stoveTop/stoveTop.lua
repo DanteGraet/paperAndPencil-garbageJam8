@@ -18,7 +18,7 @@ StoveTop.__index = StoveTop
 setmetatable(StoveTop, {__index = ObjectBase})
 
 
-function StoveTop:new(x, y, var)
+function StoveTop:new(objectManager, x, y, var)
     local variant = var or variants[math.random(1, #variants)]
 
     local r = images[variant][1]:getWidth()/2
@@ -42,7 +42,7 @@ function StoveTop:new(x, y, var)
         for i = 1, obj.items do
             local xPos, yPos = x + math.cos(r + math.random()/3) * 50, y + math.sin(r + math.random()/3) * 50
 
-            local bonus = objectManager.get("fruit"):new(xPos, yPos, nil, 150)
+            local bonus = objectManager:get("fruit"):new(objectManager, xPos, yPos, nil, 150)
 
             bonus.r = math.random() * math.pi * 2
             if obj.items ~= 0 then      -- prevent a div 0

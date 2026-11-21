@@ -9,7 +9,7 @@ Shelf.__index = Shelf
 setmetatable(Shelf, {__index = ObjectBase})
 
 
-function Shelf:new(x, y)
+function Shelf:new(objectManager, x, y)
     local obj = ObjectBase:new(x, y, images, colour, nil)
 
     obj.type = "Shelf"
@@ -22,7 +22,7 @@ function Shelf:new(x, y)
     local extra = {}
 
     for i = 1, 3 do
-        local obj = objectManager.getRandom("full"):new(x - 200 + i*100 + math.random(-25, 25), y-50, nil, 100)
+        local obj = objectManager:getRandom("full"):new(objectManager, x - 200 + i*100 + math.random(-25, 25), y-50, nil, 100)
         table.insert(extra, obj)
     end
 

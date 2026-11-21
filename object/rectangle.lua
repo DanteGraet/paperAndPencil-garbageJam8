@@ -4,7 +4,7 @@ RectangleObject.__index = RectangleObject
 setmetatable(RectangleObject, {__index = ObjectBase})
 
 
-function RectangleObject:new(x, y, sx, sy, colour, colliders)
+function RectangleObject:new(objectManager, x, y, sx, sy, colour, colliders)
     local obj = {}
 
     obj.x = x or 0

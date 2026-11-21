@@ -3,15 +3,17 @@ local level = {}
 -- viewing time in secconds
 level.time = 30
 
+local objectManager = ObjectManager()
+
 function level.loadObjects()
-    objectManager.flush()
+    objectManager:flush()
 
-    objectManager.load("object/building/building.lua", "building")
-    objectManager.load("object/skyObject/skyObject.lua", "skyObject")
+    objectManager:load("object/building/building.lua", "building")
+    objectManager:load("object/skyObject/skyObject.lua", "skyObject")
 
 
-    objectManager.load("object/static/static.lua", "static")
-    objectManager.load("object/rectangle.lua", "rect")
+    objectManager:load("object/static/static.lua", "static")
+    objectManager:load("object/rectangle.lua", "rect")
 end
 
 
@@ -26,7 +28,7 @@ function level.generateObjects()
         --x = x + lastWidth * math.random(0.55, 0.88)
         x = x + (lastWidth) - math.random(25, 50)
 
-        local obj = objectManager.get("building"):new(x, 700)
+        local obj = objectManager:get("building"):new(objectManager, x, 700)
 
         obj.x = obj.x + obj.ox
 
@@ -45,7 +47,7 @@ function level.generateObjects()
 
     table.sort(o, function(a, b) return a.rng > b.rng end)
 
-    table.insert(o, objectManager.get("static"):new(700, 700, "bar"))
+    table.insert(o, objectManager:get("static"):new(objectManager, 700, 700, "bar"))
 
     local count = math.random(2, 3)
     for i = 1, count do
@@ -53,10 +55,10 @@ function level.generateObjects()
         local x = (p) * 1200 + 100 + math.random(-100, 100)
         local y = math.random(100, 250)
 
-        table.insert(o, objectManager.get("skyObject"):new(x, y))
+        table.insert(o, objectManager:get("skyObject"):new(objectManager, x, y))
     end
 
-    table.insert(o, 1, objectManager.get("rect"):new(0, 700, 1400, 300, {.2, .7, .3}))
+    table.insert(o, 1, objectManager:get("rect"):new(objectManager, 0, 700, 1400, 300, {.2, .7, .3}))
 
     return o, {104/255, 171/255, 197/255}
 end

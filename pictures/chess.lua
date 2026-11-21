@@ -6,10 +6,12 @@ level.time = 45
 local missingPeices = {}
 local board = {}
 
-function level.loadObjects()
-    objectManager.flush()
+local objectManager = ObjectManager()
 
-    objectManager.load("object/chess/chessPiece.lua", "chessPiece")
+function level.loadObjects()
+    objectManager:flush()
+
+    objectManager:load("object/chess/chessPiece.lua", "chessPiece")
 end
 
 local function posToCords(x, y)
@@ -69,7 +71,7 @@ local function nextPeice(pieces, board)
     if board[x][y] == "" then
         board[x][y] = p
         local nx, ny = posToCords(x, y)
-        obj = objectManager.get("chessPiece"):new(nx, ny, p, 100)
+        obj = objectManager:get("chessPiece"):new(objectManager, nx, ny, p, 100)
     else
         table.insert(missingPeices, p)
     end
