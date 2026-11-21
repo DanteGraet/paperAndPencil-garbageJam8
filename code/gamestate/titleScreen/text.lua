@@ -52,7 +52,7 @@ function text.generateTextList()
         -- },
         {
             x = 32, y = --[[32+128*3]] 32+128, size = 64, interact = false, speed = 0.02,
-            text = "Draw the image then spot the difference"
+            text = ""
         },
 
         {
@@ -123,7 +123,7 @@ function text.update(dt, isNotebookOpen)
         timer = timer + textList[linesToDraw].speed
 
         if charToDraw > #current and isNotebookOpen == false then
-            timer = timer + textList[linesToDraw].speed * 15
+            timer = timer + textList[linesToDraw].speed
             linesToDraw = linesToDraw + 1
             charToDraw = 0
         end

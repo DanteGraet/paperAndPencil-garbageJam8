@@ -44,10 +44,15 @@ function ChessPiece:new(x, y, var, size)
     return obj
 end
 
+function ChessPiece:updateImage()
+    self.images = images[self.variant]
+    self.hasMutated = true
+end
 
 function ChessPiece:permutate()
     local varIdx = math.random(1, #variants)
     local newVariant = variants[varIdx]
+
 
     if newVariant == self.variant then
         varIdx = varIdx - 1
