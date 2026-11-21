@@ -186,7 +186,6 @@ function Gallery:nextPhoto()
         else
             -- self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
             self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35) - 160, 305, 305)
-            print("larger Collider")
             audioManager.setTargets({
                 always =    1,
                 draw =      1,

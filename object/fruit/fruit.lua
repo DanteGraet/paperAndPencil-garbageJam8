@@ -39,7 +39,7 @@ function ChessPiece:new(x, y, var, size)
     obj.sy = (size or 100)/(obj.ox*2)
 
     obj.variant = variant
-    obj.type = "ChessPiece"
+    obj.type = "Fruit"
 
     setmetatable(obj, {
         __index = ChessPiece,

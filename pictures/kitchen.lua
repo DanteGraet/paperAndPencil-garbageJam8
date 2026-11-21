@@ -1,13 +1,15 @@
 local level = {}
 
 -- viewing time in secconds
-level.time = 30
+level.time = 15
 local swapChance = 0
+local potI
 
 function level.loadObjects()
     objectManager.flush()
 
-    objectManager.load("object/fruit/fruit.lua", "fruit", {"benchTop"})
+    objectManager.load("object/fruit/fruit.lua", "fruit", {"benchTop", "inPot"})
+    objectManager.load("object/utensil/utensil.lua", "utensil", {"benchTop"})
 
     objectManager.load("object/stoveTop/stoveTop.lua", "stoveTop")
 end
@@ -18,11 +20,26 @@ function level.generateObjects()
 
     local objectSize = 250
 
+    local potI = math.random(0, 3)
+
     for i = 0, 3 do
         local x, y = 245 + 460*(i % 2), 255 + 440 * math.floor(i/2)
         local obj = objectManager.get("stoveTop"):new(x, y)
 
-        table.insert(o, obj)
+        if i == potI then
+            obj, extras = objectManager.get("stoveTop"):new(x, y, "pot")
+
+            for j = 1, #extras do
+                table.insert(o, extras[j])
+            end
+        end
+
+        table.insert(o, 1, obj)
+    end
+
+
+    if potI == 4 then
+        potI = nil
     end
 
     for y = 1, 3 do
@@ -52,19 +69,9 @@ function level.permutate(objects)
 
         table.remove(choices, r)
 
-        if math.random() < swapChance then
-            obj =  objectManager.getRandom():new(obj.x, obj.y)
-            obj.sx = 250/(obj.ox*2)
-            obj.sy = 250/(obj.ox*2)
-            obj.r = math.random(-100, 100)/200
+        local change = obj:permutate()
 
-            table.insert(changes, {obj.x + obj.ox, obj.y + obj.oy, obj.rx * obj.sx, obj.ry * obj.sy})
-        else
-            local change = obj:permutate()
-            obj.r = math.random(-100, 100)/200
-
-            table.insert(changes, change)
-        end
+        table.insert(changes, change)
     end
 
     return changes
