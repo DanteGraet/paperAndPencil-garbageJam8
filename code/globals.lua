@@ -1,9 +1,9 @@
 fontManager.loadFont("assets/Handwriting1-Regular.ttf", "handwriting")
 
 difficultyScale = {
-    {name = "Easy"        , photos = 2, pages = 2, timeMult = 1.5},
-    {name = "Normal"      , photos = 3, pages = 3, timeMult = 1},
-    {name = "Hard"        , photos = 3, pages = 3, timeMult = 0.8},
+    {name = "Easy"        , photos = 2, pages = 2, timeMult = 1.7},
+    {name = "Normal"      , photos = 3, pages = 3, timeMult = 1.2},
+    {name = "Hard"        , photos = 3, pages = 3, timeMult = 0.9},
 
     {name = "Extra"       , photos = 5, pages = 5, timeMult = 1},
 

@@ -9,6 +9,7 @@ function level.loadObjects()
 
     objectManager.load("object/chess/chessPiece.lua", "chessPiece", {"full"})
     objectManager.load("object/fruit/fruit.lua", "fruit", {"full"})
+    objectManager.load("object/utensil/utensil.lua", "utensil", {"full"})
     
     objectManager.load("object/empty.lua", "empty")
 end

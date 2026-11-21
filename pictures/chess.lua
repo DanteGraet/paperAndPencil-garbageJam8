@@ -156,7 +156,7 @@ function level.permutate(objects)
     local changesToMake = math.random(3, 5)
     for i = 1, math.min(16, #choices) do        --16 attempts
         if math.random(1, 3) == 1 then 
-            local obj = nextPeice(missingPeices, board)
+            local obj = nextPeice(missingPeices[math.random(1, #missingPeices)], board)
             obj.hasMutated = true
 
             table.insert(objects, obj)
