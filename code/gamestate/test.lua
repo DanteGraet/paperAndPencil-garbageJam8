@@ -6,6 +6,8 @@ local gallery
 local difficulty
 local lastFrameCanvas
 
+local fadeImage = love.graphics.newImage("assets/ui/fade.png")
+
 function g.load(diff, lf)
     difficulty = diff or 0
 
@@ -100,6 +102,7 @@ function g.draw()
     love.graphics.setBackgroundColor(73/255, 142/255, 145/255)
     love.graphics.setColor(1,1,1)
 
+
     -- if phase == "drawing" then
     --     photo:draw()
     -- elseif phase == "spotting" then
@@ -114,6 +117,17 @@ function g.draw()
         if lastFrameCanvas then
             love.graphics.draw(lastFrameCanvas, -1920 -gallery.visualPhotoSine * 1920, 0)
         end
+    end
+
+    
+    if camera.offsetX > 65 then
+        love.graphics.setColor(73/255, 142/255, 145/255)
+        
+        love.graphics.draw(fadeImage, -40, -10, 0, 1, 1100)
+        love.graphics.rectangle("fill", -camera.offsetX - 38, -10, camera.offsetX, 1100)
+
+        love.graphics.draw(fadeImage, 1920+40, -10, 0, -1, 1100)
+        love.graphics.rectangle("fill", 1920+38, -10, camera.offsetX, 1100)
     end
 end
 
