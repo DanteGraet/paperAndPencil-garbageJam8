@@ -8,6 +8,14 @@ local board = {}
 
 local objectManager = ObjectManager()
 
+function level.cleanUp()
+    objectManager = nil
+    level.time = nil
+
+    missingPeices = nil
+    board = nil
+end
+
 function level.loadObjects()
     objectManager:flush()
 
@@ -163,10 +171,12 @@ function level.permutate(objects)
     for i = 1, math.min(16, #choices) do        --16 attempts
         if #missingPeices > 0 and  math.random(1, 3) == 1 then 
             local obj = nextPeice({missingPeices}, board)
-            obj.hasMutated = true
+            if obj then
+                obj.hasMutated = true
 
-            table.insert(objects, obj)
-            changesToMake = changesToMake - 1
+                table.insert(objects, obj)
+                changesToMake = changesToMake - 1
+            end
         else
             local r = math.random(1, #choices)
             local obj = objects[choices[r]]
