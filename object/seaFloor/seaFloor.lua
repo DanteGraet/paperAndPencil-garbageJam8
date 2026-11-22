@@ -1,5 +1,5 @@
 local variants = {
-    "coral", "shortgrass", "tallGrass", "rock"
+    "coral", "shortGrass", "tallGrass", "rock"
 }
 
 local images = {}

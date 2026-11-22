@@ -530,6 +530,7 @@ function Gallery:displayScore(ox)
         end
     end
 
+
     fontManager.set("handwriting", 150)
     love.graphics.print("Total " .. percent .. "% (" .. grade .. ")", gradeX + ox, gradeY)
 end
