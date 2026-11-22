@@ -136,56 +136,58 @@ function Gallery:render(pictureNo)
     end
 end
 
-function Gallery:nextPhoto()
-    -- if self.pictures[self.currentPhoto] then
-    --     local photo = self.pictures[self.currentPhoto]
-    --     local spacing = 50
-    --     local totalPhotoWidth = (280 + spacing) * #self.pictures - spacing
-
-    --     local x = 20 + ((phase == "spotting" and 1400 * 4/10 + 50) or 0)
-    --     local y = 20 + (380 + 50) * (self.currentPhoto - 1)
-
-    --     love.graphics.origin()
-    --     love.graphics.setCanvas(self.resultsCanvas[1])
-    --     love.graphics.draw(photo.canvases[1], x, y, 0, 4/10, 4/10)
-
-    --     love.graphics.setColor(photo.frameColour)
-    --     love.graphics.draw(frameImages[1], x - 50*4/10, y - 50*4/10, 0, 4/10, 4/10)
-
-    --     love.graphics.setCanvas(self.resultsCanvas[2])
-    --     love.graphics.draw(photo.canvases[2], x, y, 0, 4/10, 4/10)
-    --     love.graphics.setColor(photo.frameColour)
-    --     love.graphics.draw(frameImages[1], x - 50*4/10, y - 50*4/10, 0, 4/10, 4/10)
-
-    --     love.graphics.setCanvas()
-    -- end
-
-    self.currentPhoto = self.currentPhoto + 1
-    self:render()
+local function saveScore(self)
+            -- Save to highscore
+    if self.difficulty > 0 then
+        local total = 0
+        for i = 1,#self.pictures do
+            local photo = self.pictures[i]
+            local score, miss, totalMods = photo:getScore()
+            total = total + score
+        end
 
 
-    if self.currentPhoto > #self.pictures + 1 and phase ~= "spotting" then
-        phase = "spotting"
-        self.currentPhoto = 1
-        self.visualPhoto = 0
+        local percent = math.floor(total/#self.pictures * 100)
+        local current = highscores:sub(self.difficulty, self.difficulty)
+        local override = true
+
+        for i = 1,#grades do
+            if grades[i][1] == current then
+                break
+            end
+
+            if total/#self.pictures >= grades[i][2] then
+                -- we have not yet found a grade this good, set it as the highscore
+                highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
+                break
+            end
+        end
 
         audioManager.setTargets({
-            always =    1,
+            always =    0.5,
             draw =      0,
             guess =     1,
-            piano =     0.5,
+            piano =     0,
             stress =    0,
         })
     end
 
-    if self.pictures[self.currentPhoto] then
-        if phase == "spotting" then
+end
 
-            if self.pictures[self.currentPhoto] then
-                self.pictures[self.currentPhoto]:permutate()
-            end
+function Gallery:nextPhoto()
+    self.currentPhoto = self.currentPhoto + 1
+    self:render()
+
+    if phase == "spotting" then
+        if self.pictures[self.currentPhoto] then
+            self.pictures[self.currentPhoto]:permutate()
         else
-            -- self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+            saveScore(self)
+            tut.generateTextList()
+        end
+
+    elseif phase == "drawing" then
+        if self.pictures[self.currentPhoto] then
             self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35) - 160, 305, 305)
             audioManager.setTargets({
                 always =    1,
@@ -197,52 +199,32 @@ function Gallery:nextPhoto()
 
             self.lastTimeRemaining = self.timeRemaining
             self.timeRemaining = (self.pictures[self.currentPhoto].level.time or 60) * self.timeScale
-        end
 
-    elseif phase == "spotting" then
+        elseif self.currentPhoto > #self.pictures + 1 then
+            phase = "spotting"
+            self.currentPhoto = 1
+            self.visualPhoto = 0
 
-        -- Save to highscore
-        if self.difficulty > 0 then
-            local total = 0
-            for i = 1,#self.pictures do
-                local photo = self.pictures[i]
-                local score, miss, totalMods = photo:getScore()
-                total = total + score
-            end
-
-
-            local percent = math.floor(total/#self.pictures * 100)
-            local current = highscores:sub(self.difficulty, self.difficulty)
-            local override = true
-
-            for i = 1,#grades do
-                if grades[i][1] == current then
-                    break
-                end
-
-                if total/#self.pictures >= grades[i][2] then
-                    -- we have not yet found a grade this good, set it as the highscore
-                    highscores = highscores:sub(1, self.difficulty - 1) .. grades[i][1] .. highscores:sub(self.difficulty + 1)
-                    break
-                end
-            end
+            self.pictures[self.currentPhoto]:permutate()
 
             audioManager.setTargets({
-                always =    0.5,
+                always =    1,
                 draw =      0,
                 guess =     1,
-                piano =     0,
+                piano =     0.5,
                 stress =    0,
             })
+
+        elseif self.currentPhoto == #self.pictures + 1 then
+            self.lastTimeRemaining = self.timeRemaining
+            self.timeRemaining = math.huge
+
+            self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+        else
+            print("Why is current photo 0?")
         end
-
-        tut.generateTextList()
-
     else
-        self.lastTimeRemaining = self.timeRemaining
-        self.timeRemaining = math.huge
-
-        self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+        print("Bad phase, " .. phase)
     end
 end
 
