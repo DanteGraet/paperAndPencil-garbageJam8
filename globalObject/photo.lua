@@ -431,7 +431,7 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
             love.graphics.rectangle("fill", x, y, 125, 125)
 
             if object.drawFind then
-                object:drawFind(canvasToDraw, x, y, 125, 125, scale, self.finds[i][2] == "correct")
+                object:drawFind(canvasToDraw, x, y, 125, 125, scale)
             else
                 if image then
                     if object.colour then
