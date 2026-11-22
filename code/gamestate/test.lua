@@ -8,6 +8,12 @@ local lastFrameCanvas
 
 local fadeImage = love.graphics.newImage("assets/ui/fade.png")
 
+function closeNotebook()
+    if notebook.isOpen then
+        notebook:setOpen(false) -- this fucntion dont work for some reason
+    end
+end
+
 function g.load(diff, lf)
     difficulty = diff or 0
 

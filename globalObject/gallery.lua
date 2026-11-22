@@ -196,6 +196,7 @@ function Gallery:nextPhoto()
         if self.pictures[self.currentPhoto] then
             self.pictures[self.currentPhoto]:permutate()
         else
+            closeNotebook()
             saveScore(self)
             tut.generateTextList()
         end
@@ -234,6 +235,7 @@ function Gallery:nextPhoto()
             self.timeRemaining = math.huge
 
             self.nextCollider = RectangularCollider(65 + 1500 - 10, 65 + 5*(125+35), 305, 145)
+            
         else
             print("Why is current photo 0?")
         end
@@ -257,6 +259,7 @@ function Gallery:mousereleased(x, y, notebookOpen)
 
     if self.currentPhoto == self.visualPhoto and finds > 0 and self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
         self:nextPhoto()
+        closeNotebook()
         audioManager.playSound(audio.click, 0.2)
     end
 end
