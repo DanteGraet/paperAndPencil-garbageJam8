@@ -1,7 +1,7 @@
 local level = {}
 
 -- viewing time in secconds
-level.time = 30
+level.time = 35
 
 local objectManager = ObjectManager()
 

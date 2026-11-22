@@ -43,7 +43,8 @@ local clockImages = {
     hand = {
         love.graphics.newImage("assets/ui/hand1.png"),
         love.graphics.newImage("assets/ui/hand2.png"),
-    }
+    },
+    background = love.graphics.newImage("assets/ui/clock3.png"),
 }
 
 setmetatable(Gallery, {
@@ -308,6 +309,47 @@ function Gallery:update(dt)
 end
 
 
+local function drawClock(x, y, time, scale, clockToDraw)
+    local angle = time/60*math.pi*2 - math.pi/2
+    local ox, oy = 0, 0
+
+    local halfWidth, halfHeight = 305/2, 214.5
+    
+    if time < 5 then
+        local r = math.random() * math.pi * 2
+        local d = math.random() * (5-time) * 3
+        ox = math.cos(r)*d
+        oy = math.sin(r)*d
+    end
+    local finalX, finalY = x + ox + halfWidth, y + oy + halfHeight
+
+    if scale == 1.2 then
+        scale = 1.1
+    end
+
+    local gBonus = 0
+    if time > 30 then
+        gBonus = tweens.sineInOut(quindoc.clamp((time - 30) /30, 0, 1)) * 0.2
+    end
+    local outsideColour = {0.8 - gBonus, 0.8, 0.8}
+
+    love.graphics.setColor(outsideColour)
+    love.graphics.circle("fill", finalX, finalY, 148 * scale)
+
+    love.graphics.setColor(1, 1, 1)
+    love.graphics.draw(clockImages.background, finalX, finalY, 0, scale, scale, halfWidth, halfHeight)
+
+    local c = 0
+    if time < 10 then
+        c = (1-time/10)/2
+    end
+    love.graphics.setColor(0+c, 0, 0)
+
+    love.graphics.draw(clockImages.clock[clockToDraw], finalX, finalY, 0,     scale, scale, halfWidth, halfHeight)
+    love.graphics.draw(clockImages.hand[clockToDraw],  finalX, finalY, angle, scale, scale, halfWidth, halfHeight)
+end
+
+
 -- Holey Spaghetti Imma forghetti how this works
 function Gallery:draw()
     local nextScale = 1
@@ -319,12 +361,7 @@ function Gallery:draw()
             nextScale = 1.2
         end
     end
-    -- (self.nextCollider:checkCollision(camera:translatePosition(love.mouse.getPosition())) and 1.2) or 1
-    -- if isNotebookOpen() then
-    --     nextScale = 1
-    -- end
 
-    --if love.mouse.isDown(1) and nextScale == 1.2 then  nextScale = 0.9 end
 
     local clockToDraw = math.floor((timer*5) % 2) + 1
 
@@ -340,26 +377,7 @@ function Gallery:draw()
                 photo:draw()
 
                 local time = (i ~= self.currentPhoto and self.lastTimeRemaining) or self.timeRemaining
-                local angle = time/60*math.pi*2 - math.pi/2
-                
-                local c = 0
-                local ox, oy = 0, 0 
-                if time < 10 then
-                    c = (1-time/10)/2
-                end
-
-                if time < 5 then
-                    local r = math.random() * math.pi * 2
-                    local d = math.random() * (5-time) * 3
-                    ox = math.cos(r)*d
-                    oy = math.sin(r)*d
-                end
-                love.graphics.setColor(0+c, 0, 0)
-                if nextScale == 1.2 then
-                    nextScale = 1.1
-                end
-                love.graphics.draw(clockImages.clock[clockToDraw], photo.x + 1400+100 + ox + 305/2, 1030 - 367 + oy + 214.5, 0, nextScale, nextScale, 305/2, 214.5)
-                love.graphics.draw(clockImages.hand[clockToDraw], photo.x +305/2 + 1400+100 +ox, 1030 - 367+214.5+oy, angle, nextScale, nextScale, 305/2, 214.5)
+                drawClock(photo.x + 1400+100, 1030 - 367, time, nextScale, clockToDraw)
 
                 love.graphics.setColor(0, 0, 0)
                 fontManager.set("handwriting", 256 - 64)
