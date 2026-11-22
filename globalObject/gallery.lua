@@ -213,7 +213,7 @@ function Gallery:nextPhoto()
             })
 
             self.lastTimeRemaining = self.timeRemaining
-            self.timeRemaining = math.max((self.pictures[self.currentPhoto].level.time or 60) * self.timeScale, 60)
+            self.timeRemaining = math.min((self.pictures[self.currentPhoto].level.time or 60) * self.timeScale, 60)
 
         elseif self.currentPhoto > #self.pictures + 1 then
             phase = "spotting"
@@ -266,6 +266,8 @@ end
 
 local dodgeFlipFlop = false
 function Gallery:update(dt)
+
+
     if phase == "drawing" then
         self.timeRemaining = self.timeRemaining - dt
 
@@ -297,6 +299,10 @@ function Gallery:update(dt)
         for i = 1, #self.pictures do
             local photo = self.pictures[i]
             photo.x = 65 - (self.visualPhotoSine-i)*1920
+        end
+
+        if (self.visualPhoto < 1 and phase == "drawing") or (self.visualPhoto > #self.pictures+1 and phase == "spotting") then
+            floatingStuff.update(dt)
         end
     end
 
@@ -436,6 +442,9 @@ function Gallery:draw()
                 local img = nextImages[clockToDraw]
                 love.graphics.draw(nextImages[clockToDraw], 65 + 1500 -10 - 1920+ img:getWidth()/2, 65 + 5*(125+35) + 10+ img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
                 self:displayScore(-1920)
+
+                floatingStuff.draw()
+                love.graphics.setColor(0, 0, 0)
                 tut.draw(false)
 
                 if sine == 0 then

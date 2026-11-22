@@ -5,6 +5,8 @@ local g = {}
 local notebook = {}
 -- tut is persistant caus why not
 
+
+
 function g.load()
     notebook = Notebook(3)
     notebook.isOpen = false
@@ -21,11 +23,15 @@ function g.load()
         piano =     0.75,
         stress =    0,
     })
+
+
 end
+
 
 function g.resize()
     camera:resize()
 end
+
 
 function g.update(dt)
     tut.update(dt, notebook.isOpen)
@@ -60,6 +66,8 @@ function g.update(dt)
 
         audioManager.setTargets(tracks)
     end
+
+    floatingStuff.update(dt)
 end
 
 function g.keypressed(key)
@@ -101,8 +109,11 @@ end
 function g.draw(skipCamera)
     if skipCamera ~= true then
         camera()
+        floatingStuff.draw()
+
     end
     love.graphics.setBackgroundColor(73/255, 142/255, 145/255)
+
 
     love.graphics.setColor(0, 0, 0)
     --fontManager.set("quindocha", 128)
@@ -111,6 +122,9 @@ function g.draw(skipCamera)
 
 
     love.graphics.setColor(1,1,1)
+
+
+
     notebook:draw()
 end
 

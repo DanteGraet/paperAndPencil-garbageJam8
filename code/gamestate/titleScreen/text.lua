@@ -10,6 +10,7 @@ local function start(difficulty)
     love.graphics.setCanvas(canvas)
     love.graphics.origin()
     local g = gamestateManager.get()
+
     g.draw(true)
     love.graphics.setCanvas()
 

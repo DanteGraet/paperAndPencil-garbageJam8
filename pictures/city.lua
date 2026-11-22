@@ -78,7 +78,7 @@ function level.permutate(objects)
         end
     end
 
-    for i = 1, math.min(math.random(3, 5), #choices) do
+    for i = 1, math.min(math.random(3, 3), #choices) do
         local r = math.random(1, #choices)
         local obj = objects[choices[r]]
 

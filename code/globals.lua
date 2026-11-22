@@ -39,6 +39,7 @@ end
 
 -- looad other globals
 tut = love.filesystem.load("code/gamestate/titleScreen/text.lua")()
+floatingStuff = love.filesystem.load("code/gamestate/titleScreen/floatingStuff.lua")()
 
 audio = {
     draw = love.audio.newSource("assets/audio/draw.ogg", "static"),

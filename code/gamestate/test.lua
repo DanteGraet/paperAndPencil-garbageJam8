@@ -121,7 +121,13 @@ function g.draw()
 
     if gallery.visualPhoto < 0 and phase == "drawing" then
         if lastFrameCanvas then
+            love.graphics.translate(-1920 -gallery.visualPhotoSine * 1920, 0)
+            floatingStuff.draw()
+            love.graphics.translate(-(-1920 -gallery.visualPhotoSine * 1920), 0)
+
+            love.graphics.setColor(1,1,1)
             love.graphics.draw(lastFrameCanvas, -1920 -gallery.visualPhotoSine * 1920, 0)
+
         end
     end
 

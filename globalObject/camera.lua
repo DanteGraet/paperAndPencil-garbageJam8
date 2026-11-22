@@ -80,6 +80,10 @@ function Camera:resize()
     self.offsetY = self.offsetY + love.graphics.getHeight() * self.anchor[2] / scaleY
 end
 
+function Camera:getOffset()
+    return self.offsetX, self.offsetY
+end
+
 
 function Camera:getScale()
     return self.scale
