@@ -59,6 +59,14 @@ function Window:permutate()
     self.hasMutated = true
 end
 
+function Window:drawFind(wobble, x, y, w, h, scale)
+    local image = self.images[wobble or 1]
+
+    love.graphics.draw(image, x + 25/2 + 50, y + 25/2 + 50, 0, scale, scale, image:getWidth()/2, image:getHeight()/2)
+
+    love.graphics.draw(images["frame"][wobble], x + 25/2 + 50, y + 25/2 + 50, 0, scale, scale, image:getWidth()/2, image:getHeight()/2)
+end
+
 
 function Window:draw(imageNo, scaleBonus)
     local image = self.images[imageNo or 1]

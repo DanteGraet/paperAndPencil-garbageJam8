@@ -30,7 +30,7 @@ function SeaFloor:new(objectManager, x, y, scale)
 
     obj.sx, obj.sy = (scale or 2), (scale or 2)
 
-    obj.colliders = {RectangularCollider(-obj.ox, -obj.oy, obj.images[1]:getWidth() * scale, obj.images[1]:getHeight()* scale)}
+    obj.colliders = {RectangularCollider(-obj.ox, -obj.oy*2, obj.images[1]:getWidth() * scale, obj.images[1]:getHeight()* scale)}
 
     setmetatable(obj, {
         __index = SeaFloor,
@@ -39,6 +39,9 @@ function SeaFloor:new(objectManager, x, y, scale)
     return obj, extra
 end
 
+function SeaFloor:drawFind(wobble, x, y, w, h, scale, isCorrect)
+    love.graphics.draw(self.images[wobble], x + 25/2 + 50, y + h, 0, scale, scale, self.images[1]:getWidth()/2, self.images[1]:getHeight())
+end
 
 function SeaFloor:permutate()
     local varIdx = math.random(1, #variants)
@@ -57,7 +60,7 @@ function SeaFloor:permutate()
 
     self.ox = self.images[1]:getWidth()/2
 
-    self.colliders = {RectangularCollider(-self.ox, -self.oy, self.images[1]:getWidth() * self.sx, self.images[1]:getHeight() * self.sy)}
+    self.colliders = {RectangularCollider(-self.ox, -self.oy*2, self.images[1]:getWidth() * self.sx, self.images[1]:getHeight() * self.sy)}
 
     self.hasMutated = true
 end

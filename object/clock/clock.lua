@@ -48,6 +48,15 @@ function Clock:permutate()
     self.hasMutated = true
 end
 
+function Clock:drawFind(wobble, x, y, w, h, scale)
+    local hand1 = (self.variant % 8) / 8 * math.pi * 2
+    local hand2 = math.floor(self.variant/ 8) / 8 * math.pi * 2
+
+    love.graphics.draw(self.images[wobble],  x + w/2,  y +h/2, 0,     scale, scale, self.images[1]:getWidth()/2, self.images[1]:getHeight()/2)
+    love.graphics.draw(images.hands[wobble], x + w/2,  y +h/2, hand1, scale, scale, self.images[1]:getWidth()/2, self.images[1]:getHeight()/2)
+    love.graphics.draw(images.hands[wobble], x + w/2,  y +h/2, hand2, scale, scale, self.images[1]:getWidth()/2, self.images[1]:getHeight()/2)
+end
+
 function Clock:draw(imageNo, scaleBonus)
     local image = self.images[imageNo or 1]
 

@@ -49,6 +49,16 @@ function Building:new(objectManager, x, y)
     return obj, extra
 end
 
+function Building:drawFind(wobble, x, y, w, h, scale, isCorrect)
+    if isCorrect then
+        love.graphics.setColor(self.colour)
+    else
+        local c = self.colour
+        love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+    end
+
+    love.graphics.draw(self.images[wobble], x + 25/2 + 50, y + h, 0, scale, scale, self.images[1]:getWidth()/2, self.images[1]:getHeight())
+end
 
 function Building:permutate()
     local varIdx = math.random(1, #variants)

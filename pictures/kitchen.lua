@@ -1,7 +1,7 @@
 local level = {}
 
 -- viewing time in secconds
-level.time = 15
+level.time = 20
 local swapChance = 0
 local potI
 
@@ -19,6 +19,7 @@ function level.loadObjects()
     objectManager:flush()
 
     objectManager:load("object/fruit/fruit.lua", "fruit", {"benchTop", "inPot"})
+    objectManager:load("object/fish/fish.lua", "fish", {"benchTop", "inPot"})
     objectManager:load("object/utensil/utensil.lua", "utensil", {"benchTop"})
 
     objectManager:load("object/stoveTop/stoveTop.lua", "stoveTop")

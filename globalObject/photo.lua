@@ -354,7 +354,8 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
         local object = self.objects[self.finds[i][1]]
         local image = (object.images and object.images[canvasToDraw]) or nil
         
-        local scale = (image and math.min(125/image:getWidth(), 125/image:getHeight())) or 0
+        local scale = (image and math.min(100/image:getWidth(), 100/image:getHeight())) or 0
+
 
         if self.finds[i][2] == "correct" then
 
@@ -362,18 +363,22 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
             love.graphics.setColor(0.5, 0.5, 0.5)
         end
 
-        love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
+        love.graphics.rectangle("fill", x, y, 125, 125)
 
-        if image then
-            if object.colour then
-                if self.finds[i][2] == "correct" then
-                    love.graphics.setColor(object.colour)
-                else
-                    local c = object.colour
-                    love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+        if object.drawFind then
+            object:drawFind(canvasToDraw, x, y, 125, 125, scale, self.finds[i][2] == "correct")
+        else
+            if image then
+                if object.colour then
+                    if self.finds[i][2] == "correct" then
+                        love.graphics.setColor(object.colour)
+                    else
+                        local c = object.colour
+                        love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+                    end
                 end
+                love.graphics.draw(image, x + 25/2 + 50, y + 25/2 + 50, object.r, scale * quindoc.sign(object.sx), scale * quindoc.sign(object.sy), image:getWidth()/2, image:getHeight()/2)
             end
-            love.graphics.draw(image, x, y, 0, scale, scale)
         end
 
         love.graphics.setColor(1, 1, 1)
@@ -382,6 +387,7 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
         if findImages[self.finds[i][2]] then
             love.graphics.draw(findImages[self.finds[i][2]][canvasToDraw], x - 10, y - 10)
         end
+        love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
     end
 
     if not drawMissing then
@@ -392,7 +398,7 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
             local x = ox + (125+35)*((i-1) % col)
             local y = oy + math.floor((i-1)/col)*(125+35) + 10
 
-
+            love.graphics.rectangle("fill", x, y, 125, 125)
             love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
             love.graphics.draw(findImages.unknown[canvasToDraw], x - 10, y - 10)
         end
@@ -422,20 +428,23 @@ function Photo:drawFinds(col, ox, oy, drawMissing)
             local scale = (image and math.min(125/image:getWidth(), 125/image:getHeight())) or 0
 
             love.graphics.setColor(0.5, 0.5, 0.5)
+            love.graphics.rectangle("fill", x, y, 125, 125)
 
-            love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
-
-            if image then
-                if object.colour then
-                    local c = object.colour
-                    love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+            if object.drawFind then
+                object:drawFind(canvasToDraw, x, y, 125, 125, scale, self.finds[i][2] == "correct")
+            else
+                if image then
+                    if object.colour then
+                        local c = object.colour
+                        love.graphics.setColor(c[1]*0.5, c[2]*0.5, c[3]*0.5)
+                    end
+                    love.graphics.draw(image, x, y, 0, scale, scale)
                 end
-                love.graphics.draw(image, x, y, 0, scale, scale)
             end
             love.graphics.setColor(1, 1, 1)
 
+            love.graphics.draw(findImages.outline[canvasToDraw], x - 10, y - 10)
             love.graphics.draw(findImages.miss[canvasToDraw], x - 10, y - 10)
-
         end
     end
 
