@@ -1,6 +1,6 @@
 local name = "Jot the Difference"
-local VERSION = "V1.0"
-DEV = true  
+local VERSION = "1.0"
+DEV = false  
 
 local TARGET_WIDTH = 1920
 local TARGET_HEIGHT = 1080

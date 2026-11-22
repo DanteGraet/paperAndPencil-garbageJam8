@@ -24,15 +24,33 @@ local text = {}
 local function toggleSettings(setting)
     settings[setting] = (settings[setting] + 1) % 5
 
-    textList[(setting == "music" and 3) or 4].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
+    textList[(setting == "music" and 2) or 3].text = string.rep("-", settings[setting]) .. "O" .. string.rep("-", 4 - settings[setting]) .. " " .. setting:gsub("^%l", string.upper)
     audioManager.playSound(audio.click, 0.2)
 end
 
 
 function text.generateTextList()
+    local highScoreCount = 0
+    for i = 1, #highscores do
+        local score = highscores:sub(i, i)
+        if score ~= "-" and score ~= "F" then
+            highScoreCount = highScoreCount + 1
+        end
+    end
+
+
+    local displayCount = math.min(highScoreCount + 3, #difficultyScale)
+    local diffSize = 64 * (displayCount+1) + 16     -- bonus 16 for play text
+    local titleSize = 128
+
+    local remainingSize = 1080 - diffSize - titleSize
+    local titleY = remainingSize / 3
+    local diffY = remainingSize / 3 * 2 + titleSize + diffSize
+
+
     textList = {
         {
-            x = 32, y = 32, size = 128, interact = false, speed = 0.05,
+            x = 32, y = titleY, align = "center", size = 128, interact = false, speed = 0.05,
             text = "Jot the Difference"
         },
         -- {
@@ -52,11 +70,6 @@ function text.generateTextList()
         --     text = "(LMB) erase"
         -- },
         {
-            x = 32, y = --[[32+128*3]] 32+128, size = 64, interact = false, speed = 0.02,
-            text = ""
-        },
-
-        {
             x = 32, y = 1080 - 32 - 64, size = 64, interact = toggleSettings, speed = 0.01, data = "music",
             text = string.rep("-", settings.music) .. "O" .. string.rep("-", 4 - settings.music) .. " Music"        -- If this moves, chnage the hard coded stuff
         },
@@ -68,19 +81,12 @@ function text.generateTextList()
 
     }
 
-    local highScoreCount = 0
-    for i = 1, #highscores do
-        local score = highscores:sub(i, i)
-        if score ~= "-" and score ~= "F" then
-            highScoreCount = highScoreCount + 1
-        end
-    end
 
-    local displayCount = math.min(highScoreCount + 3, #difficultyScale)
+
 
     table.insert(textList,
         {
-            x = 1530, y = 1080 - 32 - 64 * (displayCount+1), size = 64, interact = false, speed = 0.02,
+            x = 0, y = diffY -16 - 64 * (displayCount+1), align = "center", size = 96, interact = false, speed = 0.02,
             text = "Play"
         }
     )
@@ -92,9 +98,27 @@ function text.generateTextList()
         end
         table.insert(textList,
         {
-            x = 1545, y = 1080 - 32 - 64 * (displayCount-i+1), size = 64, interact = start, data = i, speed = 0.01,
+            x = 0, y = diffY - 64 * (displayCount-i+1), size = 64, align = "center", interact = start, data = i, speed = 0.01,
             text = difficultyScale[i].name .. suff
         })
+    end
+
+    local credits = {
+        {"A Game by Dante Graet",       "https://danteGraet.itch.io"},
+        {"for Garbage Jam 8.",         "https://itch.io/jam/garbage-jam-8"},
+        {"Made in Love2d with",         "https://love2d.org/"},
+        {"OST by Quindocah &",          "https://www.youtube.com/playlist?list=PLcj1YkFvnrqw"},
+        {"font by Goosebon."},
+    }
+    --Add the credits
+    local creditsY = 1080 - ((#credits+1) * 32) - 32
+    for i = 1,#credits do
+        table.insert(textList,
+            {
+                x = 0, y = creditsY + 32*i, align = "right", size = 32, interact = (credits[i][2] and love.system.openURL) or false, speed = 0.02, data = credits[i][2], limit = 1920 - 64,
+                text = credits[i][1]
+            }
+        )
     end
 
     -- Add colliders
@@ -105,7 +129,15 @@ function text.generateTextList()
             local width = font:getWidth(t.text .. "   .")
             local height = font:getHeight(t.text)
 
-            t.collider = RectangularCollider:new(t.x, t.y, width, height *0.9)
+            local x, y = t.x, t.y
+
+            if t.align == "center" then
+                x = ((t.limit or 1920) - width)/2
+            elseif t.align == "right" then
+                x = ((t.limit or 1920) - width)
+            end
+
+            t.collider = RectangularCollider:new(x, y, width, height *0.9)
         end
     end
 end
@@ -160,6 +192,7 @@ function text.draw(isNotebookOpen)
         if t then
             local text = textList[i].text
             local pref = ""
+            local suf = ""
             if isNotebookOpen == false and t.interact and t.collider:checkCollision(mx, my) == true then
                 pref = "X "
                 if love.mouse.isDown(1) then
@@ -167,12 +200,19 @@ function text.draw(isNotebookOpen)
                 end
             end
 
+            if t.align == "right" then
+                suf = " " .. pref
+                pref = ""
+            end
+
             if i == linesToDraw then
                 text = text:sub(0, charToDraw)
             end
 
             fontManager.set("handwriting", t.size)
-            love.graphics.print(pref .. text, t.x, t.y)
+            --love.graphics.print(pref .. text, t.x, t.y)
+
+            love.graphics.printf(pref .. text .. suf, t.x, t.y, t.limit or "1920", t.align or "left")
         end
     end
 end
