@@ -53,6 +53,20 @@ setmetatable(Gallery, {
     end
 })
 
+local function getPictureTypes(difficulty)
+    local pictureTypes = love.filesystem.getDirectoryItems("pictures")
+
+    for i = #pictureTypes, 1, -1 do
+        local t = pictureTypes[i]
+        if difficulty <= 1 then
+            if t == "chess.lua" then
+                table.remove(pictureTypes, i)
+            end
+        end
+    end
+
+    return pictureTypes
+end
 
 function Gallery:new(size, timeScale, difficulty)
     math.randomseed(os.time(), love.timer.getTime())
@@ -61,7 +75,7 @@ function Gallery:new(size, timeScale, difficulty)
 
     obj.pictures = {}
     if difficulty ~= 0 then
-        local pictureTypes = love.filesystem.getDirectoryItems("pictures")
+        local pictureTypes = getPictureTypes(difficulty)
         for i = 1, size do
             local n = math.random(1, #pictureTypes)
             local picture = Photo(65 + 1920*(i-1), 65, pictureTypes[n])
@@ -72,7 +86,7 @@ function Gallery:new(size, timeScale, difficulty)
 
             -- reset picture types if required
             if #pictureTypes == 0 then
-                pictureTypes = love.filesystem.getDirectoryItems("pictures")
+                pictureTypes = getPictureTypes(difficulty)
             end
             -- remove the picture type later TODO
         end
@@ -98,7 +112,7 @@ function Gallery:new(size, timeScale, difficulty)
         __index = Gallery,
     })
 
-    obj.timeRemaining = ((obj.pictures[obj.currentPhoto] and obj.pictures[obj.currentPhoto].level.time) or math.huge) * obj.timeScale
+    obj.timeRemaining = math.huge
     obj.lastTimeRemaining = 0
     
     obj:render()
@@ -198,7 +212,7 @@ function Gallery:nextPhoto()
             })
 
             self.lastTimeRemaining = self.timeRemaining
-            self.timeRemaining = (self.pictures[self.currentPhoto].level.time or 60) * self.timeScale
+            self.timeRemaining = math.max((self.pictures[self.currentPhoto].level.time or 60) * self.timeScale, 60)
 
         elseif self.currentPhoto > #self.pictures + 1 then
             phase = "spotting"
@@ -235,7 +249,13 @@ function Gallery:mousereleased(x, y, notebookOpen)
         end
     end
 
-    if self.currentPhoto == self.visualPhoto and self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
+    local p  = self.pictures[self.currentPhoto]
+    local finds = 1
+    if p and phase == "spotting" then
+        finds = #p.finds 
+    end
+
+    if self.currentPhoto == self.visualPhoto and finds > 0 and self.nextCollider:checkCollision(camera:translatePosition(x, y)) then
         self:nextPhoto()
         audioManager.playSound(audio.click, 0.2)
     end
@@ -377,11 +397,17 @@ function Gallery:draw()
                 photo:drawWithScaleBonus()
 
                 photo:drawFinds(2, photo.x + 1500, photo.y)
-                local img = nextImages[clockToDraw]
-                love.graphics.draw(img, photo.x + 1500 -10 + img:getWidth()/2, photo.y + 5*(125+35) + 10 + img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
+                local m
+                if #photo.finds > 0 then
+                    local img = nextImages[clockToDraw]
+                    love.graphics.draw(img, photo.x + 1500 -10 + img:getWidth()/2, photo.y + 5*(125+35) + 10 + img:getHeight()/2, 0, nextScale, nextScale, img:getWidth()/2, img:getHeight()/2)
+                    m = 4
+                end
 
                 if #photo.finds + (photo.missingMutations or 0) <= 8 then
-                    y = 4*(125+35) + 10 + 32 + 16
+                    m = m or 5
+                    
+                    y = m*(125+35) + 10 + 32 + 16
                     
                     love.graphics.setColor(0, 0, 0)
                     fontManager.set("handwriting", 64)
@@ -390,7 +416,6 @@ function Gallery:draw()
 
                     love.graphics.setColor(1, 1, 1)
                 end
-
             end
         else
             local sine = tweens.sineInOut(self.visualPhoto - self.currentPhoto)
@@ -426,7 +451,7 @@ function Gallery:draw()
 
                 love.graphics.printf("Draw what you see", x, 500, 1920, "center")
                 fontManager.set("handwriting", 48)
-                love.graphics.printf("Be quick, theres a time limit", x, 610, 1920, "center")
+                love.graphics.printf("Be quick, there's a time limit", x, 610, 1920, "center")
 
                 love.graphics.setColor(1, 1, 1)
                 local img = nextImages[clockToDraw]

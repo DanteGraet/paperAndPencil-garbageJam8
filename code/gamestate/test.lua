@@ -36,7 +36,7 @@ function g.load(diff, lf)
         notebook.isOpen = false
 
 
-        gallery = Gallery(1, 100, 0)
+        gallery = Gallery(1, 1, 0)
     end
 
     love.mouse.setVisible(true)

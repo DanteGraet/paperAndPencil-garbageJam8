@@ -304,7 +304,7 @@ function Photo:drawWithScaleBonus()
         if self.missingMutations == 0 then
             text = "All Changes Found"
         end
-        love.graphics.printf(text, self.x, 600 - tweens.sineInOut(math.min(self.outOfGuesses*2, 1))*50, 1400, "center")
+        love.graphics.printf(text, self.x, 561 - tweens.sineInOut(math.min(self.outOfGuesses*2, 1))*50, 1400, "center")
     end
 
     love.graphics.setColor(self.frameColour)
