@@ -60,7 +60,7 @@ function floatingStuff.update(dt)
 end
 
 math.randomseed(os.time(), love.timer.getTime())
-for i = 1,10 do
+for i = 1,4 do
     floatingStuff.spawn(true)
 end
 

@@ -22,15 +22,18 @@ setmetatable(Utensil, {__index = ObjectBase})
 function Utensil:new(objectManager, x, y, var)
     local variant = var or variants[math.random(1, #variants)]
 
-    local r = images[variant][1]:getWidth()/2
+    local r = images[variant][1]:getWidth()
     local colliders = {
-        ElipticalCollider(0, 0, r * 0.9, r * 0.9)
+        ElipticalCollider(0, 0, r, r)
     }
 
     local obj = ObjectBase:new(x, y, images[variant], nil, colliders)
 
     obj.variant = variant
     obj.type = "Utensil"
+
+    obj.sx = obj.sx * 3
+    obj.sy = obj.sy * 3
 
     obj.r = math.random() * math.pi * 2
 
@@ -59,12 +62,6 @@ function Utensil:brandNewVariant()
     self.variant = newVariant
 
     self.images = images[self.variant]
-    local r = images[self.variant][1]:getWidth()/2
-
-    self.ox = r
-    self.oy = r
-
-    self.colliders = { ElipticalCollider(0, 0, r * 0.9, r * 0.9) }
 end
 
 

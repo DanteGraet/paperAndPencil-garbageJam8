@@ -39,7 +39,7 @@ function text.generateTextList()
     end
 
 
-    local displayCount = math.min(highScoreCount + 3, #difficultyScale)
+    local displayCount = math.min(highScoreCount + 2, #difficultyScale)
     local diffSize = 64 * (displayCount+1) + 16     -- bonus 16 for play text
     local titleSize = 128
 
